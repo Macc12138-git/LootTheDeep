@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>Loot The Deep · 搜索与背包</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <svg
+      class="sprite-library"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <defs>
+        <symbol id="icon-battery" viewBox="0 0 64 64">
+          <path d="M23 6h18v7h7v44H16V13h7z" fill="#344650" />
+          <path d="M20 17h24v35H20z" fill="#b2b294" />
+          <path d="M20 17h24v8H20z" fill="#dad1a1" />
+          <path d="M34 27l-9 13h7l-2 10 10-15h-8z" fill="#3c514b" />
+          <path d="M27 8h10v6H27z" fill="#ddd6b5" />
+        </symbol>
+        <symbol id="icon-bandage" viewBox="0 0 64 64">
+          <path d="M12 17l33-4 9 10v27l-35 4-7-9z" fill="#788586" />
+          <path d="M13 18l32-3v30l-26 7-6-8z" fill="#d3d1bb" />
+          <path d="M45 15l8 10v24l-8-4z" fill="#8d9d95" />
+          <path d="M24 23h10v6h6v9h-6v7H24v-7h-6v-9h6z" fill="#ab6455" />
+          <path d="M16 19h25v3H16z" fill="#ebe3c9" />
+        </symbol>
+        <symbol id="icon-scrap" viewBox="0 0 64 64">
+          <path d="M9 20l30-9 15 12-4 27-25 6-17-9z" fill="#586a6d" />
+          <path d="M11 21l27-8 10 9-28 9z" fill="#b2b8aa" />
+          <path d="M20 31l28-9-2 24-24 7z" fill="#849493" />
+          <path d="M10 23l10 8 2 22-12-9z" fill="#45565b" />
+          <path d="M29 30h9v6h-9zM27 40h15v4H27z" fill="#475f64" />
+          <path d="M17 16h5v8h-5zM39 12h4v9h-4z" fill="#ccbb91" />
+        </symbol>
+        <symbol id="icon-pump" viewBox="0 0 64 64">
+          <path d="M8 21h10v-9h29v9h9v27H43v8H20v-8H8z" fill="#51676b" />
+          <path d="M20 15h24v8H20zM11 24h10v21H11z" fill="#a8b8ae" />
+          <path d="M22 23h24v26H22z" fill="#8ba2a0" />
+          <path d="M27 28h15v15H27z" fill="#28464e" />
+          <path d="M30 31h9v9h-9z" fill="#71c0b1" />
+          <path d="M47 25h6v19h-6zM24 51h15v3H24z" fill="#c1b68e" />
+        </symbol>
+        <symbol id="icon-chip" viewBox="0 0 64 64">
+          <path d="M10 13h44v40H10z" fill="#58817c" />
+          <path d="M14 17h36v31H14z" fill="#72a99a" />
+          <path d="M23 23h20v17H23z" fill="#263f45" />
+          <path d="M27 27h12v9H27z" fill="#859a8e" />
+          <path
+            d="M14 50h5v7h-5zM23 50h5v7h-5zM32 50h5v7h-5zM41 50h5v7h-5z"
+            fill="#c2af77"
+          />
+          <path
+            d="M16 22h4v4h-4zM16 31h4v10h-4zM46 20h3v22h-3z"
+            fill="#ced0a2"
+          />
+        </symbol>
+        <symbol id="icon-tank" viewBox="0 0 64 64">
+          <path
+            d="M27 4h10v8h7v6h4v34l-6 8H22l-6-8V18h4v-6h7z"
+            fill="#75948f"
+          />
+          <path d="M22 19h20v32l-4 5H26l-4-5z" fill="#a1b9a8" />
+          <path d="M16 28h32v7H16zM17 46h30v6H17z" fill="#354e54" />
+          <path d="M27 7h10v5H27z" fill="#d7c080" />
+          <path d="M25 19h4v8h-4zM25 36h4v9h-4z" fill="#d6dcc5" />
+        </symbol>
+        <symbol id="icon-tool" viewBox="0 0 64 64">
+          <path
+            d="M38 6h13l-9 12 5 7 12-10v14L48 39l-9-2-22 23-12-12 23-22-1-10z"
+            fill="#809a9d"
+          />
+          <path d="M8 48l22-21 8 8-22 22z" fill="#d1ad68" />
+          <path d="M12 48l19-18 3 3-19 18z" fill="#edd4a0" />
+          <path
+            d="M31 18l8-9h6l-9 11 10 10 10-9v5l-9 10-14-5z"
+            fill="#b2c1bb"
+          />
+        </symbol>
+        <symbol id="icon-suit" viewBox="0 0 64 64">
+          <path
+            d="M21 8h22l5 8 11 8-7 14-8-5v24H20V33l-8 5-7-14 11-8z"
+            fill="#688482"
+          />
+          <path d="M25 8h14l-3 11h-8z" fill="#263f48" />
+          <path d="M23 21h18v24H23z" fill="#a3b4a2" />
+          <path d="M30 20h4v36h-4zM20 45h24v6H20z" fill="#324c51" />
+        </symbol>
+        <symbol id="icon-box" viewBox="0 0 64 64">
+          <path d="M7 19l30-9 21 12v29L28 59 7 46z" fill="#4e6669" />
+          <path d="M7 19l30-9 21 12-30 10z" fill="#a8ad92" />
+          <path d="M28 32l30-10v29l-30 8z" fill="#8a937b" />
+          <path d="M7 19l21 13v27L7 46z" fill="#687c75" />
+          <path d="M18 16l22 12v28l7-2V26L26 14z" fill="#d0b778" />
+          <path d="M35 37h6v10h-6z" fill="#253f47" />
+        </symbol>
+      </defs>
+    </svg>
+
+    <div class="ocean" aria-hidden="true">
+      <div class="light-shaft shaft-one"></div>
+      <div class="light-shaft shaft-two"></div>
+      <div class="seabed"></div>
+      <div class="wreck"></div>
+      <div class="world-player"></div>
+      <div class="world-crate"></div>
+      <div class="world-dots"></div>
+    </div>
+    <header class="world-hud">
+      <a class="brand" href="#" aria-label="Loot The Deep"
+        ><span class="brand-mark">⌁</span
+        ><span
+          >LOOT<span class="brand-thin">THE</span>DEEP<small
+            >深海行动 / 交互样板</small
+          ></span
+        ></a
+      >
+      <div class="world-position">
+        <span class="live-dot"></span> 水下探索 <i></i
+        ><span class="mono">DEPTH −084 M</span>
+      </div>
+      <button id="reset-demo" class="quiet-button">↻ 重置演示</button>
+    </header>
+
+    <main id="inventory" class="inventory-shell" aria-label="搜索与背包">
+      <header class="inventory-header">
+        <div>
+          <div class="eyebrow">FIELD INVENTORY <span>/ 01</span></div>
+          <h1>
+            随身物品<span class="heading-rule"></span
+            ><span id="page-mode">容器搜索</span>
+          </h1>
+        </div>
+        <div class="header-actions">
+          <span class="session-tag"><span></span> 本局携带 · 尚未撤离</span
+          ><button id="close-panel" class="close-button" aria-label="关闭背包">
+            关闭 <kbd>ESC</kbd><span>×</span>
+          </button>
+        </div>
+      </header>
+      <div class="inventory-body">
+        <section class="operator-column" aria-labelledby="operator-title">
+          <div class="section-heading">
+            <h2 id="operator-title">潜水员</h2>
+            <span class="section-code">OPERATOR / 01</span>
+          </div>
+          <div class="operator-stage">
+            <div class="stage-grid"></div>
+            <span class="operator-label"
+              >浅潜型装备<small>STANDARD DIVE KIT</small></span
+            >
+            <svg
+              class="diver"
+              viewBox="0 0 240 350"
+              role="img"
+              aria-label="穿着潜水装备的像素风玩家轮廓"
+              shape-rendering="crispEdges"
+            >
+              <path d="M86 82h68v155H86z" fill="#203a40" />
+              <path d="M89 88h-17v109h17zM151 88h17v109h-17z" fill="#59776e" />
+              <path d="M70 119h20v51H70zM150 119h20v51h-20z" fill="#90a69a" />
+              <path d="M92 43h56v50H92zM102 31h36v13h-36z" fill="#94a69b" />
+              <path d="M87 47h66v31H87z" fill="#2c4247" />
+              <path d="M93 51h54v21H93z" fill="#b4d6c2" />
+              <path d="M97 55h21v12H97z" fill="#e2e5c6" />
+              <path d="M91 84h58v16h-58z" fill="#516a63" />
+              <path d="M82 100h76v94H82z" fill="#6b8277" />
+              <path d="M94 102h52v70H94z" fill="#9ba68b" />
+              <path d="M95 111h50v13H95zM94 131h51v28H94z" fill="#52665c" />
+              <path
+                d="M102 136h11v16h-11zM117 136h11v16h-11zM132 136h8v16h-8z"
+                fill="#81917a"
+              />
+              <path d="M82 99h11v79H82zM147 99h11v79h-11z" fill="#304b4f" />
+              <path d="M104 173h33v13h-33z" fill="#c5ac74" />
+              <path d="M77 190h86v17H77z" fill="#273d43" />
+              <path d="M114 192h13v11h-13z" fill="#c7b68c" />
+              <path
+                d="M59 100h23v54H59zM45 144h25v61H45zM42 205h26v25H42z"
+                fill="#5d776e"
+              />
+              <path d="M58 111h14v30H58zM48 158h14v39H48z" fill="#99a893" />
+              <path
+                d="M158 100h23v54h-23zM170 144h25v61h-25zM172 205h26v25h-26z"
+                fill="#5d776e"
+              />
+              <path d="M168 111h12v30h-12zM179 158h12v39h-12z" fill="#99a893" />
+              <path d="M81 207h36v69H81zM126 207h35v69h-35z" fill="#62796c" />
+              <path d="M80 247h37v24H80zM126 247h36v24h-36z" fill="#314d50" />
+              <path d="M86 275h28v43H86zM129 275h27v43h-27z" fill="#839581" />
+              <path d="M83 308h32v17H83zM128 308h32v17h-32z" fill="#31494b" />
+              <path d="M67 325h48v15H67zM128 325h48v15h-48z" fill="#acaa80" />
+              <path d="M146 77h16v13h-8v20h-9V90h-7V78z" fill="#cfb577" />
+              <path d="M54 213h8v37h-8z" fill="#c8b079" />
+            </svg>
+            <div class="figure-bracket bracket-left"></div>
+            <div class="figure-bracket bracket-right"></div>
+            <span class="stage-caption">装备概览 <span>01—03</span></span>
+          </div>
+          <div class="equipment-list">
+            <div class="equipment-row">
+              <span class="equipment-icon"
+                ><svg><use href="#icon-suit" /></svg
+              ></span>
+              <div><small>潜水服</small><strong>轻型潜水服</strong></div>
+              <span class="equipped-dot" title="已装备"></span>
+            </div>
+            <div class="equipment-row">
+              <span class="equipment-icon"
+                ><svg><use href="#icon-tank" /></svg
+              ></span>
+              <div><small>氧气设备</small><strong>标准氧气瓶</strong></div>
+              <span class="equipped-dot" title="已装备"></span>
+            </div>
+            <div class="equipment-row">
+              <span class="equipment-icon"
+                ><svg><use href="#icon-tool" /></svg
+              ></span>
+              <div><small>工具</small><strong>维修扳手</strong></div>
+              <span class="equipped-dot" title="已装备"></span>
+            </div>
+          </div>
+          <div class="operator-footnote">
+            装备展示 <span>本轮仅开放背包整理</span>
+          </div>
+        </section>
+
+        <section class="bag-column" aria-labelledby="bag-title">
+          <div class="section-heading">
+            <h2 id="bag-title">我的背包</h2>
+            <span class="section-code">CARRY / EQUIPMENT</span>
+          </div>
+          <div class="storage-heading">
+            <div class="storage-symbol">▦</div>
+            <div>
+              <h3>随身收纳</h3>
+              <p>本局物资 · 撤离后入库</p>
+            </div>
+            <span class="size-badge">71 格</span>
+          </div>
+          <div class="capacity">
+            <span>空间占用 <strong id="capacity-label">— / 71</strong></span>
+            <div class="capacity-track"><i id="capacity-fill"></i></div>
+          </div>
+          <div id="bag-scroll" class="bag-scroll" tabindex="0" role="region" aria-label="可滚动背包，支持上下滚动">
+<section class="storage-section"><header><h3>胸挂</h3><span>轻型战术胸挂 · 8 格</span></header><div class="storage-layout"><div class="storage-equipment" role="img" aria-label="胸挂装备图标"><svg viewBox="0 0 64 64" aria-hidden="true" shape-rendering="crispEdges"><path d="M15 6h10v12h14V6h10v14l7 8v29H8V28l7-8z" fill="#6d877b"/><path d="M13 30h17v21H13zM34 30h17v21H34z" fill="#a1ad8c"/><path d="M15 34h13v5H15zM36 34h13v5H36zM28 19h8v9h-8z" fill="#334d50"/></svg><span>胸挂</span></div><div class="storage-slots"><div class="rig-layout"><div id="rig-main-grid" class="item-grid gear-grid" style="--cols:2" data-owner="rig-main" role="group" aria-label="胸挂主袋，2列2行"></div><div id="rig-left-grid" class="item-grid gear-grid" style="--cols:1" data-owner="rig-left" role="group" aria-label="胸挂侧袋一，1列2行"></div><div id="rig-right-grid" class="item-grid gear-grid" style="--cols:1" data-owner="rig-right" role="group" aria-label="胸挂侧袋二，1列2行"></div></div><p>独立袋位，物品不能跨袋放置</p></div></div></section><section class="storage-section"><header><h3>口袋</h3><span>4 × 独立单格</span></header><div class="storage-layout"><div class="storage-equipment" role="img" aria-label="口袋装备图标"><svg viewBox="0 0 64 64" aria-hidden="true" shape-rendering="crispEdges"><path d="M10 13h44v34L43 58H21L10 47z" fill="#72877a"/><path d="M10 13h44v17l-22 8-22-8z" fill="#a6b393"/><path d="M28 26h8v11h-8z" fill="#d4b975"/><path d="M16 41h3v8h-3zM45 41h3v8h-3z" fill="#aab696"/></svg><span>口袋</span></div><div class="storage-slots"><div class="pockets-layout"><div id="pocket1-grid" class="item-grid gear-grid" style="--cols:1" data-owner="pocket1" role="group" aria-label="口袋1，1列1行"></div><div id="pocket2-grid" class="item-grid gear-grid" style="--cols:1" data-owner="pocket2" role="group" aria-label="口袋2，1列1行"></div><div id="pocket3-grid" class="item-grid gear-grid" style="--cols:1" data-owner="pocket3" role="group" aria-label="口袋3，1列1行"></div><div id="pocket4-grid" class="item-grid gear-grid" style="--cols:1" data-owner="pocket4" role="group" aria-label="口袋4，1列1行"></div></div></div></div></section><section class="storage-section"><header><h3>背包</h3><span>轻型打捞背包 · 5 × 10</span></header><div class="storage-layout"><div class="storage-equipment" role="img" aria-label="背包装备图标"><svg viewBox="0 0 64 64" aria-hidden="true" shape-rendering="crispEdges"><path d="M22 5h20v9h8l7 12v31H7V26l7-12h8z" fill="#607f76"/><path d="M27 9h10v7H27z" fill="#1e373d"/><path d="M14 18h36v17H14z" fill="#a1b090"/><path d="M15 39h34v15H15z" fill="#839976"/><path d="M20 18h5v17h-5zM39 18h5v17h-5z" fill="#d1b776"/><path d="M20 43h24v3H20z" fill="#354d4b"/></svg><span>背包</span></div><div class="storage-slots">          <div
+            id="bag-grid"
+            class="item-grid"
+            data-owner="bag"
+            role="group"
+            aria-label="玩家背包，5列10行"
+          ></div></div></div></section><section class="storage-section"><header><h3>保险箱</h3><span>3 × 3 · 9 格</span></header><div class="storage-layout"><div class="storage-equipment" role="img" aria-label="保险箱装备图标"><svg viewBox="0 0 64 64" aria-hidden="true" shape-rendering="crispEdges"><path d="M7 9h50v49H7z" fill="#6b8285"/><path d="M12 14h40v39H12z" fill="#304c55"/><path d="M16 18h32v31H16z" fill="#8faaa5"/><path d="M24 26h16v15H24z" fill="#344e56"/><path d="M29 29h6v9h-6zM43 24h3v17h-3z" fill="#d8bc7e"/></svg><span>保险箱</span></div><div class="storage-slots"><div id="safe-grid" class="item-grid gear-grid" style="--cols:3" data-owner="safe" role="group" aria-label="保险箱，3列3行"></div></div></div></section>
+          </div>
+          <p class="scroll-hint">滚轮上下滚动 · 触控板纵向滑动</p>
+          <div class="bag-note">
+            <span class="note-icon">↳</span>
+            <p>
+              值得带走的，才值得占一格。<small
+                >拖动物品整理空间，或快捷转移已发现的物资。</small
+              >
+            </p>
+          </div>
+          <div class="bag-bottom">
+            <span class="small-cross">＋</span
+            ><span>本局携带不等于永久获得</span
+            ><span class="mono">EXTRACT TO KEEP</span>
+          </div>
+        </section>
+
+        <section class="loot-column" aria-labelledby="loot-title">
+          <div class="section-heading">
+            <h2 id="loot-title">搜索容器</h2>
+            <span class="section-code">LOOT / 6 × 4</span>
+          </div>
+          <div class="storage-heading">
+            <span class="crate-icon"
+              ><svg><use href="#icon-box" /></svg
+            ></span>
+            <div>
+              <h3>沉船维修箱 <span class="container-id"># 014</span></h3>
+              <p>工业物资 / 交互范围内</p>
+            </div>
+            <span class="range-indicator"><span></span>可搜索</span>
+          </div>
+          <div class="search-status">
+            <div>
+              <span id="search-light" class="search-light"></span
+              ><strong id="search-label" aria-live="polite">等待搜索</strong
+              ><span id="found-count">已发现 0 件</span>
+            </div>
+            <button id="toggle-search" class="text-button">开始搜索</button>
+          </div>
+          <div
+            id="loot-grid"
+            class="item-grid"
+            data-owner="loot"
+            role="group"
+            aria-label="维修箱，6列4行"
+          ></div>
+          <div id="search-progress-panel" class="search-progress-panel">
+            <div class="search-progress-top">
+              <span id="progress-caption">辨认箱内物资</span
+              ><span id="progress-percent" class="mono">00%</span>
+            </div>
+            <div class="search-track"><i id="search-fill"></i></div>
+            <p id="search-help">物品逐件揭示，已发现物品可随时拿取。</p>
+          </div>
+          <div class="container-note">
+            <svg><use href="#icon-box" /></svg>
+            <p>
+              搜索需要时间<small>关闭页面会中断搜索，已发现的物品保留。</small>
+            </p>
+          </div>
+          <div id="no-container" class="no-container" hidden>
+            <span>⌕</span>
+            <h3>未搜索容器</h3>
+            <p>靠近可搜索目标，按 E 查看其中物资。</p>
+            <button id="open-container" class="primary-button">
+              搜索维修箱 <kbd>E</kbd>
+            </button>
+          </div>
+        </section>
+      </div>
+      <footer class="detail-bar">
+        <div id="detail-icon" class="detail-icon">
+          <svg><use href="#icon-bandage" /></svg>
+        </div>
+        <div class="detail-copy">
+          <div>
+            <h3 id="detail-name">急救绷带</h3>
+            <span id="detail-rarity" class="rarity-label">普通</span
+            ><span id="detail-size" class="mono">1 × 1</span>
+          </div>
+          <p id="detail-description">
+            密封防水的基础医疗物资，可用于处理轻微创伤。
+          </p>
+        </div>
+        <button id="transfer-selected" class="transfer-button">
+          移入容器 <span>↗</span>
+        </button>
+      </footer>
+      <div class="controls-bar">
+        <div>
+          <span><kbd>拖拽</kbd> 移动物品</span><span><kbd>R</kbd> 旋转</span
+          ><span><kbd>Ctrl / ⌘</kbd> + 点击 快捷转移</span>
+        </div>
+        <span><kbd>Tab</kbd> 背包 <i>/</i> <kbd>Esc</kbd> 关闭</span>
+      </div>
+    </main>
+
+    <section id="closed-state" class="closed-state" hidden>
+      <span class="eyebrow">INTERACTION AVAILABLE</span>
+      <h2>沉船维修箱</h2>
+      <p>已发现的物资仍在原处，可继续搜索或整理背包。</p>
+      <div>
+        <button id="reopen" class="primary-button">继续搜索 <kbd>E</kbd></button
+        ><button id="open-bag" class="quiet-button">
+          我的背包 <kbd>Tab</kbd>
+        </button>
+      </div>
+    </section>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <div id="drag-ghost" aria-hidden="true" hidden></div>
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: UnderwaterDepthBackground
+  m_Shader: {fileID: 4800000, guid: 229d49220c60a4889acb0ef314a7d6b9, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Ints: []
+    m_Floats:
+    - _DitherStrength: 0.7
+    - _MidPoint: 0.42
+    - _ParticleStrength: 0.55
+    - _RayStrength: 0.16
+    - _ReferenceDotSize: 0.06
+    - _ReferenceDotSpacing: 2
+    - _ReferenceDotStrength: 0.2
+    m_Colors:
+    - _DeepBottomColor: {r: 0.0034709887, g: 0.025056189, b: 0.05660379, a: 1}
+    - _DeepTopColor: {r: 0.010991462, g: 0.10896205, b: 0.1792453, a: 1}
+    - _MidBottomColor: {r: 0.035, g: 0.247, b: 0.392, a: 1}
+    - _MidTopColor: {r: 0.086, g: 0.443, b: 0.624, a: 1}
+    - _ReferenceResolution: {r: 640, g: 360, b: 0, a: 0}
+    - _ShallowBottomColor: {r: 0.086, g: 0.478, b: 0.655, a: 1}
+    - _ShallowTopColor: {r: 0.208, g: 0.796, b: 0.91, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
