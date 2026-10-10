@@ -10,6 +10,10 @@ namespace LootTheDeep.Gameplay
         [SerializeField] private Graphic[] crosshairParts;
         [SerializeField] private Text weaponLabel;
         [SerializeField] private Text ammoLabel;
+        [SerializeField] private RectTransform reloadGroup;
+        [SerializeField] private Image reloadFill;
+        [SerializeField] private Text reloadLabel;
+        private bool reloading;
 
         private RectTransform canvasRect;
         private Canvas canvas;
@@ -22,17 +26,29 @@ namespace LootTheDeep.Gameplay
             ammoLabel = ammo;
         }
 
+        public void ConfigureReload(RectTransform group, Image fill, Text label)
+        {
+            reloadGroup = group; reloadFill = fill; reloadLabel = label;
+        }
+
         private void Awake()
         {
             canvas = GetComponent<Canvas>();
             canvasRect = GetComponent<RectTransform>();
         }
 
-        public void SetCombatActive(bool active)
+        public void SetCombatActive(bool active, bool inventoryOpen)
         {
             if (crosshair != null) crosshair.gameObject.SetActive(active);
             if (weaponLabel != null) weaponLabel.gameObject.SetActive(active);
             if (ammoLabel != null) ammoLabel.gameObject.SetActive(active);
+            if (reloadGroup != null)
+            {
+                reloadGroup.gameObject.SetActive((active || inventoryOpen) && reloading);
+                reloadGroup.anchorMin = reloadGroup.anchorMax = reloadGroup.pivot =
+                    inventoryOpen ? new Vector2(0.5f, 1f) : Vector2.one;
+                reloadGroup.anchoredPosition = inventoryOpen ? new Vector2(0f, -12f) : new Vector2(-26f, -90f);
+            }
         }
 
         public void SetCrosshair(Vector2 screenPoint, bool valid)
@@ -46,10 +62,13 @@ namespace LootTheDeep.Gameplay
                 if (part != null) part.color = color;
         }
 
-        public void SetWeapon(string weaponName, int ammo, int capacity, bool unlimited)
+        public void SetWeapon(string weaponName, int ammo, bool loading, float progress)
         {
             if (weaponLabel != null) weaponLabel.text = weaponName;
-            if (ammoLabel != null) ammoLabel.text = unlimited ? "TEST  INF" : $"TEST  {ammo:00} / {capacity:00}";
+            if (ammoLabel != null) ammoLabel.text = ammo == 0 && !loading ? "空仓  按 R 换弹" : $"{ammo:00} / ∞";
+            reloading = loading;
+            if (reloadFill != null) reloadFill.fillAmount = Mathf.Clamp01(progress);
+            if (reloadLabel != null) reloadLabel.text = loading ? "换弹中" : "";
         }
     }
 }

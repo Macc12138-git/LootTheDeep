@@ -149,6 +149,11 @@ namespace LootTheDeep.Inventory
             activeContainers.Add(container);
             container.Initialize(lootResolver, lootGenerator, lootPlanner, lootRandom);
         }
+
+        public void RegisterPrototypeContainer(SearchableContainer container)
+        {
+            if (container != null && container.isActiveAndEnabled) AddContainer(container);
+        }
         private void DisconnectRegions()
         {
             foreach (var region in regions)

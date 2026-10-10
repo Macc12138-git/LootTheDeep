@@ -1,4 +1,5 @@
 using UnityEngine;
+using LootTheDeep.Gameplay;
 
 namespace LootTheDeep.Inventory
 {
@@ -29,6 +30,16 @@ namespace LootTheDeep.Inventory
         public bool Searching { get; private set; }
         public LootItem Current => Contents?.NextUnknown();
         private Color originalColor;
+
+        public void ConfigureFixedPrototype(string name, LootDefinition definition)
+        {
+            displayName = name;
+            lootMode = ContainerLootMode.FixedPrototype;
+            initialItems = definition == null ? System.Array.Empty<InventorySeed>() : new[]
+            {
+                new InventorySeed { definition = definition, position = Vector2Int.zero }
+            };
+        }
 
         public RegionContainerManager FindNearestRegion()
         {
@@ -94,7 +105,12 @@ namespace LootTheDeep.Inventory
         {
             if (visual != null) visual.color = value ? new Color(1f, .87f, .49f) : originalColor;
         }
-        public void BeginSearch() { Searching = Current != null; Progress = 0f; }
+        public void BeginSearch()
+        {
+            Searching = Current != null;
+            Progress = 0f;
+            if (Searching) CombatNoise2D.Emit(transform.position, 5f);
+        }
         public void PauseSearch() { Searching = false; Progress = 0f; }
         public bool Tick(float deltaTime)
         {

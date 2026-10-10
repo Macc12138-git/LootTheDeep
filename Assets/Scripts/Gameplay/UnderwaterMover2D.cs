@@ -25,6 +25,14 @@ namespace LootTheDeep.Gameplay
         private InputAction moveAction;
         private Vector2 moveInput;
         private bool inventoryOpen;
+        private bool combatEnded;
+
+        public void SetCombatEnded(bool value)
+        {
+            combatEnded = value;
+            moveInput = Vector2.zero;
+            if (body != null) body.linearVelocity = Vector2.zero;
+        }
 
         public void SetInventoryOpen(bool value)
         {
@@ -56,7 +64,7 @@ namespace LootTheDeep.Gameplay
 
         private void Update()
         {
-            if (inventoryOpen) return;
+            if (inventoryOpen || combatEnded) return;
             moveInput = moveAction?.ReadValue<Vector2>() ?? Vector2.zero;
             moveInput = Vector2.ClampMagnitude(moveInput, 1f);
 
@@ -70,7 +78,7 @@ namespace LootTheDeep.Gameplay
 
         private void FixedUpdate()
         {
-            if (inventoryOpen) { body.linearVelocity = Vector2.zero; return; }
+            if (inventoryOpen || combatEnded) { body.linearVelocity = Vector2.zero; return; }
             Vector2 targetVelocity = moveInput * moveSpeed;
             float changeRate = moveInput.sqrMagnitude > 0.001f ? acceleration : deceleration;
             Vector2 velocity = Vector2.MoveTowards(body.linearVelocity, targetVelocity, changeRate * Time.fixedDeltaTime);

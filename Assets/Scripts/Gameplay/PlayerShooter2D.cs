@@ -21,15 +21,18 @@ namespace LootTheDeep.Gameplay
             [Min(0.01f)] public float fireInterval;
             [Min(0.1f)] public float projectileSpeed;
             [Min(0)] public int initialAmmo;
+            [Min(0.1f)] public float reloadSeconds = 1.8f;
 
             [NonSerialized] public int Ammo;
             [NonSerialized] public float NextShotAt;
             [NonSerialized] public float FlashUntil;
+            [NonSerialized] public float ReloadRemaining;
+            public bool IsReloading => ReloadRemaining > 0f;
+            public float ReloadProgress => IsReloading ? 1f - ReloadRemaining / reloadSeconds : 0f;
         }
 
         [SerializeField] private Transform weaponPivot;
         [SerializeField] private WeaponSlot[] weapons;
-        [SerializeField] private bool infiniteAmmo;
         [SerializeField, Min(0f)] private float minimumMuzzleDistance = 0.08f;
 
         private PlayerInput playerInput;
@@ -41,6 +44,8 @@ namespace LootTheDeep.Gameplay
         private ShootingHud2D hud;
         private Camera targetCamera;
         private Collider2D ownerCollider;
+        private CombatHealth2D health;
+        private CombatPrototypeSession2D session;
         private Vector2 aimWorldPoint;
         private int activeIndex;
         private bool aimValid;
@@ -62,11 +67,13 @@ namespace LootTheDeep.Gameplay
         {
             playerInput = GetComponent<PlayerInput>();
             ownerCollider = GetComponent<Collider2D>();
+            health = GetComponent<CombatHealth2D>();
             if (weapons == null) return;
             foreach (WeaponSlot weapon in weapons)
             {
                 weapon.Ammo = weapon.initialAmmo;
                 weapon.NextShotAt = 0f;
+                weapon.ReloadRemaining = 0f;
             }
             SelectWeapon(0);
         }
@@ -86,6 +93,7 @@ namespace LootTheDeep.Gameplay
             targetCamera = Camera.main;
             inventory = FindFirstObjectByType<InventorySession>();
             hud = FindFirstObjectByType<ShootingHud2D>();
+            session = FindFirstObjectByType<CombatPrototypeSession2D>();
             RefreshWeaponHud();
         }
 
@@ -93,18 +101,30 @@ namespace LootTheDeep.Gameplay
         {
             if (weapons != null)
                 foreach (WeaponSlot weapon in weapons)
+                {
+                    if (weapon.IsReloading && health != null && !health.IsDead &&
+                        (session == null || !session.IsFinished))
+                    {
+                        weapon.ReloadRemaining = Mathf.Max(0f, weapon.ReloadRemaining - Time.deltaTime);
+                        if (!weapon.IsReloading) weapon.Ammo = weapon.initialAmmo;
+                    }
                     if (weapon.muzzleFlash != null && weapon.muzzleFlash.gameObject.activeSelf &&
                         Time.time >= weapon.FlashUntil)
                         weapon.muzzleFlash.gameObject.SetActive(false);
+                }
 
             bool playable = focused && targetCamera != null && hud != null && aimPointAction != null &&
-                (inventory == null || !inventory.IsOpen);
+                (inventory == null || !inventory.IsOpen) && (health == null || !health.IsDead) &&
+                (session == null || !session.IsFinished);
             SetCombatCursor(playable);
-            hud?.SetCombatActive(playable);
+            RefreshWeaponHud();
+            hud?.SetCombatActive(playable, inventory != null && inventory.IsOpen &&
+                (health == null || !health.IsDead) && (session == null || !session.IsFinished));
             if (!playable || weaponPivot == null || ActiveWeapon?.muzzle == null) return;
 
             if (previousAction?.WasPressedThisFrame() == true) SelectWeapon(0);
             if (nextAction?.WasPressedThisFrame() == true) SelectWeapon(1);
+            if (Keyboard.current?.rKey.wasPressedThisFrame == true) Reload();
 
             Vector2 screenPoint = aimPointAction.ReadValue<Vector2>();
             var ray = targetCamera.ScreenPointToRay(screenPoint);
@@ -138,19 +158,30 @@ namespace LootTheDeep.Gameplay
             RefreshWeaponHud();
         }
 
+        public void Reload()
+        {
+            WeaponSlot weapon = ActiveWeapon;
+            if (weapon == null || weapon.IsReloading || weapon.Ammo >= weapon.initialAmmo ||
+                health != null && health.IsDead || session != null && session.IsFinished) return;
+            weapon.ReloadRemaining = weapon.reloadSeconds;
+            RefreshWeaponHud();
+        }
+
         private void TryFire()
         {
             WeaponSlot weapon = ActiveWeapon;
-            if (weapon.projectilePrefab == null || Time.time < weapon.NextShotAt ||
-                (!infiniteAmmo && weapon.Ammo <= 0)) return;
+            if (weapon == null || weapon.projectilePrefab == null || weapon.IsReloading ||
+                Time.time < weapon.NextShotAt || weapon.Ammo <= 0 ||
+                health != null && health.IsDead || session != null && session.IsFinished) return;
 
             Vector2 origin = weapon.muzzle.position;
             Vector2 direction = (aimWorldPoint - origin).normalized;
             ShootingProjectile2D projectile = Instantiate(weapon.projectilePrefab, origin,
                 Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg));
             projectile.Fire(direction, weapon.projectileSpeed, weapon.damage, ownerCollider);
-            if (!infiniteAmmo) weapon.Ammo--;
+            weapon.Ammo--;
             weapon.NextShotAt = Time.time + weapon.fireInterval;
+            CombatNoise2D.Emit(transform.position, 8f);
             if (weapon.muzzleFlash != null)
             {
                 weapon.FlashUntil = Time.time + 0.08f;
@@ -163,7 +194,7 @@ namespace LootTheDeep.Gameplay
         {
             WeaponSlot weapon = ActiveWeapon;
             if (weapon != null && hud != null)
-                hud.SetWeapon(weapon.displayName, weapon.Ammo, weapon.initialAmmo, infiniteAmmo);
+                hud.SetWeapon(weapon.displayName, weapon.Ammo, weapon.IsReloading, weapon.ReloadProgress);
         }
 
         private void SetCombatCursor(bool active)
@@ -196,7 +227,7 @@ namespace LootTheDeep.Gameplay
                 Cursor.visible = previousCursorVisible;
                 cursorBaselineCaptured = false;
             }
-            hud?.SetCombatActive(false);
+            hud?.SetCombatActive(false, false);
         }
     }
 }
