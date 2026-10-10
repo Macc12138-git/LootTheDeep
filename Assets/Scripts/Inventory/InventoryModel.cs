@@ -67,6 +67,12 @@ namespace LootTheDeep.Inventory
                 throw new InvalidOperationException("Invalid initial inventory placement.");
             Commit(item, x, y, false);
         }
+        public void SeedGenerated(LootItem item, int x, int y, bool rotated)
+        {
+            if (item.Owner != null || !CanPlace(item, x, y, rotated))
+                throw new InvalidOperationException("Invalid generated inventory placement.");
+            Commit(item, x, y, rotated);
+        }
         private void Commit(LootItem item, int x, int y, bool rotated)
         {
             item.Owner?.items.Remove(item);

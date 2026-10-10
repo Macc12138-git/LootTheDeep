@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1003}
   - component: {fileID: 1004}
   m_Layer: 0
-  m_Name: "SearchableContainer"
+  m_Name: SearchableContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,6 +25,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1001}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -34,6 +35,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1003
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -102,7 +104,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1f2787d60294f5cb5471001b213703b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  displayName: 沉船维修箱
+  type: 1
+  lootMode: 1
+  defaultTable: {fileID: 11400000, guid: c93ae88cd464849eca51c2bedb1a8b0c, type: 2}
+  overrideTable: {fileID: 0}
+  displayName: "\u6C89\u8239\u7EF4\u4FEE\u7BB1"
   searchSeconds: 1.5
   columns: 6
   rows: 4

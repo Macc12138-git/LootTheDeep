@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6844e9f60934ea293bd542b5c82f7be, type: 3}
+  m_Name: MechanicalRegion
+  m_EditorClassIdentifier: Assembly-CSharp::LootTheDeep.Inventory.RegionLootConfigSO
+  bindings:
+  - type: 1
+    table: {fileID: 11400000, guid: 712423e480de748d79673836faddfa89, type: 2}
+  - type: 2
+    table: {fileID: 11400000, guid: a7a3d03a585c3456580775a804fc2c89, type: 2}

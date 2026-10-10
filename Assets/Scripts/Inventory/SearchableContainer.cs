@@ -4,6 +4,19 @@ namespace LootTheDeep.Inventory
 {
     public sealed class SearchableContainer : MonoBehaviour
     {
+        [SerializeField] private ContainerType type = ContainerType.MaintenanceBox;
+        [SerializeField] private ContainerLootMode lootMode;
+        [SerializeField] private LootTableSO defaultTable;
+        [SerializeField] private LootTableSO overrideTable;
+        public ContainerType Type => type;
+        public ContainerLootMode LootMode => lootMode;
+        public LootTableSO DefaultTable => defaultTable;
+        public LootTableSO OverrideTable => overrideTable;
+        public int Columns => columns;
+        public int Rows => rows;
+        public string InitializationError { get; private set; }
+        private bool initializationAttempted;
+        private RegionContainerManager registeredRegion;
         public string displayName = "沉船维修箱";
         [Min(0.1f)] public float searchSeconds = 1.5f;
         [SerializeField, Min(1)] private int columns = 6;
@@ -17,13 +30,65 @@ namespace LootTheDeep.Inventory
         public LootItem Current => Contents?.NextUnknown();
         private Color originalColor;
 
+        public RegionContainerManager FindNearestRegion()
+        {
+            return GetComponentInParent<RegionContainerManager>(true);
+        }
         public void Initialize()
         {
-            if (Contents != null) return;
-            Contents = new GridInventory(displayName, columns, rows);
-            foreach (var seed in initialItems)
-                Contents.Seed(new LootItem(seed.definition, false), seed.position.x, seed.position.y);
+            Initialize(new LootRuleResolver(), new LootGenerator(), new LootPlacementPlanner(), new System.Random());
+        }
+        public bool Initialize(LootRuleResolver resolver, LootGenerator generator,
+            LootPlacementPlanner planner, System.Random random)
+        {
+            if (initializationAttempted) return Contents != null;
+            initializationAttempted = true;
             if (visual != null) originalColor = visual.color;
+            try
+            {
+                var inventory = new GridInventory(displayName, columns, rows);
+                if (lootMode == ContainerLootMode.FixedPrototype)
+                {
+                    if (initialItems != null)
+                        foreach (var seed in initialItems)
+                            inventory.Seed(new LootItem(seed.definition, false), seed.position.x, seed.position.y);
+                }
+                else
+                {
+                    var errors = resolver.ValidateContainer(this);
+                    if (errors.Count > 0) throw new System.InvalidOperationException(string.Join("\n", errors));
+                    var generated = generator.Generate(resolver.Resolve(this).Table, random);
+                    if (!planner.TryPlan(generated, columns, rows, out var placements, out var error))
+                        throw new System.InvalidOperationException(error);
+                    foreach (var placement in placements)
+                        inventory.SeedGenerated(new LootItem(placement.Definition, false),
+                            placement.X, placement.Y, placement.Rotated);
+                }
+                Contents = inventory;
+                return true;
+            }
+            catch (System.Exception exception)
+            {
+                InitializationError = exception.Message;
+                Debug.LogError(displayName + "：" + InitializationError, this);
+                return false;
+            }
+        }
+        private void OnEnable() { UpdateRegionRegistration(); }
+        private void OnTransformParentChanged() { UpdateRegionRegistration(); }
+        private void UpdateRegionRegistration()
+        {
+            var region = FindNearestRegion();
+            if (registeredRegion != region)
+            {
+                if (registeredRegion != null) registeredRegion.UnregisterContainer(this);
+                registeredRegion = region;
+            }
+            if (registeredRegion != null) registeredRegion.RegisterContainer(this);
+        }
+        private void OnDestroy()
+        {
+            if (registeredRegion != null) registeredRegion.UnregisterContainer(this);
         }
         public void Highlight(bool value)
         {

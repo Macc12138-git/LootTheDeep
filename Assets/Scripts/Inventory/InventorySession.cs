@@ -17,6 +17,13 @@ namespace LootTheDeep.Inventory
         public InventoryView View => view;
         public SearchableContainer Target { get; private set; }
         public bool IsOpen { get; private set; }
+        private readonly List<SearchableContainer> activeContainers = new();
+        private readonly List<RegionContainerManager> regions = new();
+        private readonly LootRuleResolver lootResolver = new();
+        private readonly LootGenerator lootGenerator = new();
+        private readonly LootPlacementPlanner lootPlanner = new();
+        private readonly System.Random lootRandom = new();
+        private bool started;
         private SearchableContainer nearby;
         private CursorLockMode previousLock;
         private bool previousCursor;
@@ -28,7 +35,8 @@ namespace LootTheDeep.Inventory
                 Storage.Add(new GridInventory(grid.displayName, grid.columns, grid.rows));
             foreach (var seed in initialItems)
                 Storage[seed.area].Seed(new LootItem(seed.definition), seed.position.x, seed.position.y);
-            foreach (var container in containers) if (container != null) container.Initialize();
+            started = true;
+            ConnectRegions();
             View.Bind(this);
             View.Show(false);
         }
@@ -61,9 +69,9 @@ namespace LootTheDeep.Inventory
         {
             SearchableContainer candidate = null;
             float distance = interactDistance;
-            foreach (var container in containers)
+            foreach (var container in activeContainers)
             {
-                if (container == null || !container.isActiveAndEnabled) continue;
+                if (container == null || !container.isActiveAndEnabled || container.Contents == null) continue;
                 float next = Vector2.Distance(player.transform.position, container.transform.position);
                 if (next <= distance) { distance = next; candidate = container; }
             }
@@ -77,7 +85,7 @@ namespace LootTheDeep.Inventory
         }
         public void Open(SearchableContainer container)
         {
-            if (View == null) return;
+            if (View == null || (container != null && container.Contents == null)) return;
             if (!IsOpen)
             {
                 previousLock = Cursor.lockState; previousCursor = Cursor.visible; hasCursorState = true;
@@ -112,6 +120,42 @@ namespace LootTheDeep.Inventory
         {
             if (!focus && View != null) { View.CancelDrag(); Target?.PauseSearch(); if (IsOpen) View.Refresh(); }
         }
-        private void OnDisable() { Close(); }
+        private void ConnectRegions()
+        {
+            DisconnectRegions();
+            foreach (var root in gameObject.scene.GetRootGameObjects())
+                foreach (var region in root.GetComponentsInChildren<RegionContainerManager>(true))
+                {
+                    region.RefreshContainers();
+                    regions.Add(region);
+                    region.ContainersChanged += RefreshRegionContainers;
+                }
+            RefreshRegionContainers();
+        }
+        private void RefreshRegionContainers()
+        {
+            activeContainers.Clear();
+            foreach (var region in regions)
+                if (region != null)
+                    foreach (var container in region.Containers) AddContainer(container);
+            // Compatibility for existing prototype scenes. Region-managed boxes need no manual registration.
+            if (containers != null)
+                foreach (var container in containers)
+                    if (container != null && container.FindNearestRegion() == null) AddContainer(container);
+        }
+        private void AddContainer(SearchableContainer container)
+        {
+            if (container == null || activeContainers.Contains(container)) return;
+            activeContainers.Add(container);
+            container.Initialize(lootResolver, lootGenerator, lootPlanner, lootRandom);
+        }
+        private void DisconnectRegions()
+        {
+            foreach (var region in regions)
+                if (region != null) region.ContainersChanged -= RefreshRegionContainers;
+            regions.Clear();
+        }
+        private void OnEnable() { if (started) ConnectRegions(); }
+        private void OnDisable() { DisconnectRegions(); Close(); }
     }
 }

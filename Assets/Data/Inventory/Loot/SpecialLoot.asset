@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5ff9be43343483eb609a8edcd5ce4d5, type: 3}
+  m_Name: SpecialLoot
+  m_EditorClassIdentifier: Assembly-CSharp::LootTheDeep.Inventory.LootTableSO
+  groups:
+  - name: "\u8BBE\u5907\u6838\u5FC3\u5956\u52B1"
+    coreReward: 1
+    minRolls: 1
+    maxRolls: 1
+    qualityWeights:
+    - 0
+    - 0
+    - 90
+    - 10
+    entries:
+    - item: {fileID: 11400000, guid: b3b16a2cb60f4d38aae06100d8af120f, type: 2}
+      weight: 1
+    - item: {fileID: 11400000, guid: fde5c802f4c5426d8ce5877e1cd12f78, type: 2}
+      weight: 1
+  - name: "\u9644\u52A0\u5956\u52B1"
+    coreReward: 0
+    minRolls: 1
+    maxRolls: 2
+    qualityWeights:
+    - 75
+    - 25
+    - 0
+    - 0
+    entries:
+    - item: {fileID: 11400000, guid: 87ed118d606042c2b0f37a401f13250b, type: 2}
+      weight: 1
+    - item: {fileID: 11400000, guid: 6dba5abc84c947e18bb4bad64f2b6bfb, type: 2}
+      weight: 1
