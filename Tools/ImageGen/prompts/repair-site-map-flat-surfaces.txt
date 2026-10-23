@@ -1,0 +1,13 @@
+Use case: precise-object-edit
+Asset type: complete continuous pixel-art exploration map, surface cleanup revision.
+Input images: Image 1 is the EDIT TARGET, the unannotated assembled map. Preserve its map layout.
+
+Primary request: replace the dense pebbled and speckled surface treatment with clean, flat matte surfaces throughout the map. The dirt and roads currently have countless tiny rounded bright stones with little individual shadows. Remove these completely from every road, dirt patch, courtyard floor and border. Also remove tiny loose stone clusters along road shoulders, at wall bases and around large rocks. Replace them with level continuous ground in the corresponding base color. Clean road edges must have no granular fringe.
+
+Desired ground: ochre packed dirt and desaturated grey compacted-earth paths, each rendered in broad quiet color patches with very sparse low-contrast flat angular marks. Use only two or three closely related tones within each large patch. Grey paths remain clearly distinct from ochre dirt and retain exactly the same route shapes, widths and connections. Concrete remains a flat warm grey floor with a few large panel seams and restrained broad cracks. Do not replace the removed dots with a finer noise pattern, tiny pits, circular spots, dotted shading or dither. No individual highlights or shadows on tiny ground marks.
+
+Keep the larger obstacle rocks and cliffs, but simplify their surfaces into large angular shaded planes. Keep masonry walls readable as large blocks. Keep the nine containers, including their handles, latches, contrasting colors and the yellow-lidded special case. Do not add decorative details. Preserve crisp pixel clusters and defined shape edges; this is simplified pixel art, not a blurred or filtered image.
+
+Invariants: preserve the elevated orthographic camera, 4:3 framing, original earthy palette, complete rocky boundary, every large rock obstacle, low walls and openings, all nine container locations and sizes, the two upper courtyard floors, central junction, north-south lane, lower bypass and entry/exit gaps. Change surface texture only, not map geometry or composition. No cropping, zooming or new objects.
+
+Avoid: dense gravel, tiny pebbles, bead-like bumps, raised circular dots, pores, stippling, dithering, granular noise, pebble fringes, vegetation, characters, enemies, animals, vehicles, machinery, roofs, buildings, UI, lettering, labels, arrows, red annotation boxes, watermark and grid. Only ground, roads, walls, large solid obstacles and closed containers. Return one complete map.

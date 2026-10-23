@@ -1,0 +1,9 @@
+Use case: precise-object-edit
+Asset type: complete continuous pixel-art exploration map.
+Input images: Image 1 is the EDIT TARGET, the assembled map to preserve.
+
+Change only one thing: remove every plant from the entire map. Remove all yellow grass tufts, cacti, stalks, weeds and other vegetation, including tiny plants at the bases of walls and rocks. Replace their pixels with the adjacent ochre ground, gravel, concrete or rock texture so the removal is seamless.
+
+Preserve the entire map composition, camera angle, earthy pixel-art style, pixel scale, colors, rocky boundary shape, low walls, all nine containers and their locations, roads, concrete floor patches, shadows, courtyard openings, entrance and exit gaps, central junction and continuous lower bypass. Keep the two roofless upper yards and all connected walking routes exactly where they are. Do not redesign, crop or zoom the map. Do not add any objects.
+
+The finished map must contain only ground, roads, walls, rock or solid obstacles and recognizable closed containers. No vegetation anywhere, no people, enemies, animals, vehicles, machinery, roofs, buildings, UI, labels, lettering, arrows, symbols, watermark or grid. Return one complete map with the same framing and aspect ratio as the input.

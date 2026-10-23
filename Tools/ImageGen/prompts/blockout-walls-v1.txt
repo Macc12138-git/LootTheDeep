@@ -1,0 +1,15 @@
+Use case: stylized-concept
+Asset type: three master wall sprites for a modular 64 by 64 pixel Unity Tilemap. The final directional variants will be made by rotating these master sprites.
+
+The input is a precise GEOMETRY GUIDE, not an art style reference. Preserve its three equal square cells, silhouettes, wall thickness, positions and edge connections exactly. The sheet is three square cells in one horizontal row, with NO margins, gutters, frames, labels or grid lines. Keep the background perfectly flat pure magenta #FF00FF everywhere outside the wall shapes, for later transparency extraction. No shadows or color spill onto magenta.
+
+Render only the three grey wall pieces shown in the guide:
+1. Left cell: one continuous straight horizontal wall, reaching the left AND right cell edges exactly. Both ends are open seamless connections, with no end-cap outline at the cell boundaries.
+2. Middle cell: one connected square L-shaped wall from the TOP edge center to the RIGHT edge center. It has a square 90-degree elbow at the cell center, no diagonal or curved corner. These two open ports reach their cell boundaries exactly; do not cap them.
+3. Right cell: a vertical half-wall from the TOP edge center to a closed square end near the cell center. The top is a seamless open connection; the bottom end is visibly capped.
+
+All walls have the same 24-pixel thickness at the eventual 64-pixel cell size, with edge ports precisely centered. Maintain the silhouettes from the guide. Imagine the artwork at native 64-pixel cells and upscale with crisp square pixel steps. Do not add clearance or padding at connected edges, and do not turn the L piece into two disconnected bars.
+
+Appearance: extremely simple neutral grey blockout walls, a little darker than a neutral medium-grey floor. Broad flat medium-dark grey wall-top surface, dark grey contour at exposed sides, a narrow lighter edge and a slightly darker bevel for modest depth. Clean solid geometric masses, with a few low-contrast large tone patches at most. No specific theme, no bricks, no decorative trim or material detail. Orthographic top view, not isometric; wall geometry remains perfectly aligned with the canvas axes. Use even neutral lighting and consistent profiles. Nothing extends beyond the guide silhouettes. The surfaces should tile quietly, without a seam or a dark line across their open connection ports.
+
+Only these wall sprites and the solid magenta key background. No floor, rooms, characters, objects, scenery, labels, arrows, checkerboard, lettering, symbols or watermark. No pebbles, round bumps, cracks, speckling, grain, dithering, noisy textures, gradients or soft shadows. Return one image in the same 3:1 aspect ratio and exact three-cell layout as the guide.

@@ -1,0 +1,5 @@
+dataPath=/Users/user/Desktop/LootTheDeep/Assets
+product=LootTheDeep
+scene=Assets/Scenes/ExploreScene.unity
+Idle: 1.20s, looping=True
+Move: 0.68s, looping=True

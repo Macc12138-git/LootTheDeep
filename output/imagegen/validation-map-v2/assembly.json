@@ -1,0 +1,69 @@
+{
+  "canvas_size": [
+    2896,
+    2172
+  ],
+  "chunks": [
+    {
+      "name": "nw",
+      "source_size": [
+        1448,
+        1086
+      ],
+      "chunk_size": [
+        1448,
+        1086
+      ],
+      "pixel_origin_top_left": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "ne",
+      "source_size": [
+        1448,
+        1086
+      ],
+      "chunk_size": [
+        1448,
+        1086
+      ],
+      "pixel_origin_top_left": [
+        1448,
+        0
+      ]
+    },
+    {
+      "name": "sw",
+      "source_size": [
+        1448,
+        1086
+      ],
+      "chunk_size": [
+        1448,
+        1086
+      ],
+      "pixel_origin_top_left": [
+        0,
+        1086
+      ]
+    },
+    {
+      "name": "se",
+      "source_size": [
+        1448,
+        1086
+      ],
+      "chunk_size": [
+        1448,
+        1086
+      ],
+      "pixel_origin_top_left": [
+        1448,
+        1086
+      ]
+    }
+  ],
+  "scope": "Reference-led map image, not a Unity Tilemap."
+}

@@ -1,0 +1,6 @@
+Use case: stylized-concept
+Asset type: one neutral seamless ground texture for blocking out a 2D top-down Unity Tilemap.
+
+Generate ONLY a plain, flat, neutral medium-grey ground surface covering the entire square image edge to edge. This is a deliberately simple temporary floor for testing room outlines and movement scale. No specific environment theme or decorative style. Use a nearly uniform matte grey base, with just a few extremely subtle broad angular patches within a narrow value range, so the floor is quiet under gameplay objects. Simple crisp flat pixel shapes, not realistic material detail. The texture must remain readable when reduced to a 64 by 64 pixel tile.
+
+Top-down orthographic view directly onto the ground, with perfectly even lighting. All four edges must repeat seamlessly in both directions, with consistent tone and no border. No vignette, gradients, central focal point, shadows or bright highlights. No visible paving grid or individual bricks. No walls, room shapes, passages, edges of land, obstacles, containers, vegetation, objects, characters, text or interface. No dots, small pebbles, bumps, pores, cracks, speckles, grain or dithering. Return one opaque square image consisting entirely of this quiet grey floor texture.

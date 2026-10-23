@@ -1,0 +1,108 @@
+{
+  "tile_size": 64,
+  "wall_width": 24,
+  "atlas_size": [
+    320,
+    128
+  ],
+  "columns": 5,
+  "rows": 2,
+  "tiles": [
+    {
+      "name": "straight_ew",
+      "label": "横向直墙",
+      "row_from_top": 0,
+      "column": 0,
+      "connections": [
+        "E",
+        "W"
+      ]
+    },
+    {
+      "name": "straight_ns",
+      "label": "纵向直墙",
+      "row_from_top": 0,
+      "column": 1,
+      "connections": [
+        "N",
+        "S"
+      ]
+    },
+    {
+      "name": "corner_ne",
+      "label": "上右转角",
+      "row_from_top": 0,
+      "column": 2,
+      "connections": [
+        "N",
+        "E"
+      ]
+    },
+    {
+      "name": "corner_es",
+      "label": "右下转角",
+      "row_from_top": 0,
+      "column": 3,
+      "connections": [
+        "E",
+        "S"
+      ]
+    },
+    {
+      "name": "corner_sw",
+      "label": "下左转角",
+      "row_from_top": 0,
+      "column": 4,
+      "connections": [
+        "S",
+        "W"
+      ]
+    },
+    {
+      "name": "corner_wn",
+      "label": "左上转角",
+      "row_from_top": 1,
+      "column": 0,
+      "connections": [
+        "W",
+        "N"
+      ]
+    },
+    {
+      "name": "end_n",
+      "label": "向上连接的收口",
+      "row_from_top": 1,
+      "column": 1,
+      "connections": [
+        "N"
+      ]
+    },
+    {
+      "name": "end_e",
+      "label": "向右连接的收口",
+      "row_from_top": 1,
+      "column": 2,
+      "connections": [
+        "E"
+      ]
+    },
+    {
+      "name": "end_s",
+      "label": "向下连接的收口",
+      "row_from_top": 1,
+      "column": 3,
+      "connections": [
+        "S"
+      ]
+    },
+    {
+      "name": "end_w",
+      "label": "向左连接的收口",
+      "row_from_top": 1,
+      "column": 4,
+      "connections": [
+        "W"
+      ]
+    }
+  ]
+}

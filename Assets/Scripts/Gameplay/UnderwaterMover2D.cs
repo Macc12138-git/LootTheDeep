@@ -19,6 +19,9 @@ namespace LootTheDeep.Gameplay
 
         [Header("Presentation")]
         [SerializeField] private Transform visualRoot;
+        [SerializeField] private Animator animator;
+
+        private static readonly int IsMovingParameter = Animator.StringToHash("IsMoving");
 
         private Rigidbody2D body;
         private PlayerInput playerInput;
@@ -32,6 +35,7 @@ namespace LootTheDeep.Gameplay
             combatEnded = value;
             moveInput = Vector2.zero;
             if (body != null) body.linearVelocity = Vector2.zero;
+            RefreshAnimation();
         }
 
         public void SetInventoryOpen(bool value)
@@ -39,6 +43,7 @@ namespace LootTheDeep.Gameplay
             inventoryOpen = value;
             moveInput = Vector2.zero;
             if (body != null) body.linearVelocity = Vector2.zero;
+            RefreshAnimation();
         }
 
         public void Configure(Transform objectVisual)
@@ -64,9 +69,11 @@ namespace LootTheDeep.Gameplay
 
         private void Update()
         {
-            if (inventoryOpen || combatEnded) return;
-            moveInput = moveAction?.ReadValue<Vector2>() ?? Vector2.zero;
+            moveInput = inventoryOpen || combatEnded
+                ? Vector2.zero
+                : moveAction?.ReadValue<Vector2>() ?? Vector2.zero;
             moveInput = Vector2.ClampMagnitude(moveInput, 1f);
+            RefreshAnimation();
 
             if (visualRoot != null && Mathf.Abs(moveInput.x) > 0.01f)
             {
@@ -74,6 +81,18 @@ namespace LootTheDeep.Gameplay
                 scale.x = Mathf.Abs(scale.x) * Mathf.Sign(moveInput.x);
                 visualRoot.localScale = scale;
             }
+        }
+
+        private void OnDisable()
+        {
+            moveInput = Vector2.zero;
+            RefreshAnimation();
+        }
+
+        private void RefreshAnimation()
+        {
+            if (animator != null)
+                animator.SetBool(IsMovingParameter, moveInput.sqrMagnitude > 0.001f);
         }
 
         private void FixedUpdate()

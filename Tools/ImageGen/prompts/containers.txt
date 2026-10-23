@@ -1,0 +1,16 @@
+Use case: stylized-concept
+Asset type: Searchable container sprite sheet for a Unity 2D repair-site prototype.
+Input images: Image 1 is a STYLE REFERENCE ONLY. Use its restrained pixel art, industrial material shading, earthy palette and elevated orthographic viewpoint. Do not reproduce its character, interaction circle, progress bar, HUD or scene layout.
+
+Surface treatment: clean matte color panels, broad pixel-color clusters and sparse flat wear marks. Preserve readable handles and latches. No fields of rounded specks, raised dots, bead-like bumps, pores, stippling, dithering, granular noise or dense tiny rust spots. Keep the surfaces simple and the pixel edges crisp.
+
+Generate six closed containers, arranged in two rows of three equal 320x320 cells, centered within a 1024x1024 canvas with a 32-pixel outer margin. No visible dividers or labels.
+
+Top row: one wooden supply crate; one red metal toolbox; one olive green supply case.
+Bottom row: one blue-grey metal toolbox; one white medical case with a simple small medical mark; one dark reinforced equipment case with yellow corner guards.
+
+Make the six silhouettes readable at gameplay scale. Maintain the same world scale, pixel density, viewing direction and upper-left illumination. The reinforced case may be slightly larger, but all are portable containers. Each sprite is entirely inside its own cell, with clear padding and a consistent bottom-center placement. No clipped handles, merged items, duplicate containers or decoration scattered around them. Keep any contact shadow tight beneath the object.
+
+Background: a single perfectly uniform vivid magenta RGB(255,0,255), no checkerboard, texture, gradient, vignette or cast shadow on the background. Do not use magenta on any object. This background is for later chroma-key removal.
+
+Only these six containers in their closed state. No ground, walls, plants, characters, enemies, weapons, UI, labels, text, watermark, glow or floating markers.

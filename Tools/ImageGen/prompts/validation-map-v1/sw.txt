@@ -1,0 +1,15 @@
+Use case: stylized-concept
+Asset type: southwest quarter of one continuous four-image pixel-art exploration map.
+Primary request: render this blockout as the ARRIVAL AND SUPPLIES sector of a larger abandoned repair compound. Broad open loading ground, partial low walls, an ordinary stores yard, and a southern bypass between rock groups. Approximately 48x36 ground cells at gameplay sprite scale; do not compress a whole level into this image.
+
+Image 1 is the exact LAYOUT AND SCALE GUIDE. Keep the paths, floor patches, wall openings and small container placements. Redraw its simple blocks as finished pixel-game sprites, not schematic markers. Image 2 is the STYLE reference: match its palette, coarse square pixel clusters, stepped silhouettes, dark object contours and limited flat shades, but not its layout.
+
+Scale: at 1448x1086, crates 35-42 pixels wide, toolboxes 30-38 pixels wide, upright lockers about 28x50 pixels, walls about 20 pixels thick with a 30-45 pixel visible face, road width about 90-110 pixels, gates at least 70 pixels. An unseen player would be 24x36 pixels. Do not draw the player or enlarge props. This entire image uses the same world scale as its neighbors.
+
+Style and surfaces: hand-authored pixel art with a two-to-three screen-pixel rhythm, simple stepped outlines and compact solid forms. Warm tan dirt RGB 180,148,99; desaturated grey paths 124,122,121; grey-violet concrete 145,142,145. Three or four discrete shades per material and short simple contact shadows. Quiet terrain with only sparse flat angular wear marks. No photorealism, continuous painted volume, smooth curves, bevel noise, grain, dense stones or blur.
+
+Sector: the northwest loading pad has partial walls and two ordinary closed containers; the northeast small stores yard has at least two entrances and two closed containers. A fifth wooden crate sits beside the southern rocky bypass. Keep the loading area visibly more open and less fortified than the northern sectors. Retain the guide's separated low cover walls and a few large rock groups, with generous traversable dirt between them. No additional objects.
+
+Shared edges: TOP and RIGHT continue into other sectors. Top road crossings centered at 24.2% and 77.3% of image width; right crossings at 29.5% and 78.3% of image height. Preserve exact road locations and widths from Image 1. Do not draw perimeter rocks along these internal edges. Keep their last 80 pixels simple and close to the guide, without props or new obstacles. Only LEFT and BOTTOM carry the global rocky boundary. Keep the LEFT entrance gap near 74% image height, as shown in the guide. No entrance marker, sign or device. Terrain fills the canvas edge to edge.
+
+Only ground, roads, low walls, large rock obstacles and five closed searchable containers. No plants, people, enemies, animals, machinery, vehicles, roofs, furniture, decorative clutter, dropped items, signs, labels, lettering, arrows, grid, UI, logo, frame or watermark. No dense gravel, bead-like round bumps, pores, individually shaded tiny dots, stippling, dithering or noisy surfaces. Return the exact guide framing as one finished map section.

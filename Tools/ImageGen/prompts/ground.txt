@@ -1,0 +1,18 @@
+Use case: stylized-concept
+Asset type: Unity 2D ground Tilemap texture study for a small playable prototype.
+Input images: Image 1 is a STYLE REFERENCE ONLY. Use its earthy palette, pixel clusters, material shading and elevated orthographic viewpoint. Do not copy its characters, UI, buildings, vegetation, fences or layout.
+
+Generate a compact ground-and-road texture sheet for a deserted repair site. Restrict the image to ochre packed dirt, grey compacted-earth road surfaces and worn grey concrete floor surfaces. Match the reference's readable, restrained pixel art. Keep textures quiet enough for characters and searchable containers to stand out. No perspective convergence, no isometric diamond tiles, no artificial blur or photorealism.
+
+Surface treatment is mandatory and overrides texture detail in the reference: use flat matte surfaces, broad clean pixel-color clusters and very sparse low-contrast angular wear. Distinguish terrain materials through their base color and large shapes. No dense little stones, gravel grains, rounded specks, raised dots, bead-like bumps, pores, stippling, dithering, granular noise or individual highlight-shadow pairs on tiny surface marks. Dirt and roads must look smooth and level, with clean shoulders and no pebble fringe. Retain crisp pixel edges; do not use blur to hide detail.
+
+Canvas: 1024x1024 pixels, arranged as an 8x8 grid of 128x128 cells, with zero margin and zero spacing. No visible grid lines or labels. Each cell is a separate terrain tile, not a complete miniature scene.
+
+Rows 1-2: sixteen fully opaque repeatable ochre dirt center tiles with only broad low-contrast color variations and a few flat angular wear marks. Match all opposing edges to permit seamless repetition.
+Rows 3-4: repeatable smooth grey compacted-earth road center tiles, then road-to-dirt top, bottom, left and right shoulders, all four convex corners and all four concave corners. Make paired boundaries match so a road can be assembled at arbitrary width.
+Rows 5-6: repeatable worn concrete floor centers, then concrete-to-dirt top, bottom, left and right edges, all four convex corners and all four concave corners. Keep panel seams consistent across corresponding cell boundaries.
+Rows 7-8: quieter variants of the dirt, compacted-earth road and concrete centers, without additional material types.
+
+Use continuous ground coverage with opaque pixels. Do not bake shadows from walls or props into these tiles. No walls, rocks, grass tufts, containers, buildings, people, enemies, signs, UI, text or watermark. The entire image must contain only terrain textures and terrain transitions.
+
+This is an initial visual study; prioritize consistent material scale and readable surfaces.

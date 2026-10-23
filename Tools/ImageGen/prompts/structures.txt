@@ -1,0 +1,16 @@
+Use case: stylized-concept
+Asset type: Modular environment sprite sheet for a Unity 2D repair-site prototype.
+Input images: Image 1 is a STYLE REFERENCE ONLY. Match its restrained pixel art, earthy colors, visible front faces and upper surfaces, and elevated orthographic viewpoint. Do not copy its characters, UI, graveyard, vegetation or level layout.
+
+Surface treatment: large clean angular planes, matte colors and a few broad cracks or chips. Override any fine texture in the reference. No dense rounded specks, raised dots, bead-like bumps, pores, stippling, dithering, granular noise or tiny stones coating the surfaces. Keep crisp pixel edges and readable solid silhouettes.
+
+Generate six separate environment pieces arranged in two rows of three equal 320x320 cells, centered within a 1024x1024 canvas. Leave a 32-pixel outer margin. No visible dividers or labels. All six pieces share identical world scale, material resolution and upper-left illumination.
+
+Top row: one irregular large brown rock; one short horizontal brown cliff section with a visible top and front face; one brown cliff corner with compatible profile and height.
+Bottom row: one short horizontal worn concrete wall; one short vertical worn concrete wall of the same construction; one L-shaped concrete wall corner that matches both straight sections. Use the reference's simple industrial character without adding doors, machinery or signage.
+
+Every piece must be entirely visible with padding, separated from every other piece, and free of attached ground, plants, containers or loose rubble. Keep shapes simple enough to outline their ground footprint with a collider. Keep contact shading tight against each object; no long cast shadows.
+
+Background: a single perfectly uniform vivid magenta RGB(255,0,255), no texture, checkerboard, vignette, gradient or shadow on the background. Do not use magenta in any object. This background is for later chroma-key removal; do not depict transparency as a checkerboard.
+
+Only rocks, cliff pieces and concrete walls. No complete scene, terrain base, buildings, roofs, characters, enemies, UI, text, watermark or extra props.

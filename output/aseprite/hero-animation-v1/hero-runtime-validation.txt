@@ -1,0 +1,2 @@
+PASSED: initial Idle, both sprite loops, movement, left/right facing, vertical movement, release to Idle, inventory lock/resume, combat lock/resume, disabled movement to Idle.
+dataPath=/Users/user/Desktop/LootTheDeep/Assets

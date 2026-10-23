@@ -1,0 +1,12 @@
+Use case: style-transfer
+Asset type: one corrected local pixel-game environment sample.
+
+Image 1 is the EDIT TARGET. Image 2 is the user's original outdoor-game STYLE AND CAMERA REFERENCE. Image 3 is the original stone interior reference, supporting wall construction only. Correct the target's camera and sprite proportions to the original screenshots. Keep its small dirt clearing, three distinct closed containers, green ground and two rock groups.
+
+The target currently looks like an isometric illustration with diagonally receding stonework. Redraw it as an actual straight-on top-down RPG game screen like Images 2 and 3. Every architectural wall baseline must be exactly HORIZONTAL or VERTICAL on the screen. The main stone wall runs horizontally across the upper-right background. A short perpendicular wall runs vertically down near its right end. Their corners form square right angles in screen space. The camera looks down at the floor, but upright walls and chest fronts are drawn straight toward the viewer, exactly as in the source game. No diagonal wall baselines, converging lines, diamond-grid geometry or three-quarter view of box side faces.
+
+Make the three containers about half their present width relative to the screen and leave the center open. Their lids are shallow horizontal rectangles above upright FRONT-facing bodies, with compact chunky silhouettes like the source game's small props. Keep one wood crate, one iron-banded wood chest and one blue-grey equipment chest. Group them by the upper-right wall with irregular spacing.
+
+Copy the ORIGINAL REFERENCES' sprite language: visibly large square pixels, simple dark stepped outlines, a few broad connected flat shades, deliberate low-resolution shapes. Wall faces consist of a few big staggered brick courses, not tall individual rock pillars or smooth sculpted columns. Broad muted green and brown ground shapes, only a few sparse flat wear patches. No fine shaded texture, tiny bevels, gradient modeling, painterly rendering or glossy 3D detail. Preserve the original references' quiet, slightly warm game atmosphere.
+
+Only ground, dirt roads, walls, large solid rock obstacles and three closed containers. No characters, plants, trees, roofs, furniture, machinery, UI, labels, text or border. No dense round pebbles, bumpy dots, pores, grain or noisy texture. Frame a cropped local environment continuing beyond the canvas edges. Return one finished corrected image.

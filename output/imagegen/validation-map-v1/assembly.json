@@ -1,0 +1,123 @@
+{
+  "canvas_size": [
+    2896,
+    2172
+  ],
+  "suggested_grid": [
+    96,
+    72
+  ],
+  "terrain_color_anchors_rgb": {
+    "nw": [
+      [
+        178,
+        142,
+        89
+      ],
+      [
+        108,
+        109,
+        112
+      ]
+    ],
+    "ne": [
+      [
+        186,
+        145,
+        88
+      ],
+      [
+        112,
+        112,
+        114
+      ]
+    ],
+    "sw": [
+      [
+        179,
+        139,
+        83
+      ],
+      [
+        108,
+        108,
+        110
+      ]
+    ],
+    "se": [
+      [
+        181,
+        143,
+        88
+      ],
+      [
+        113,
+        113,
+        114
+      ]
+    ]
+  },
+  "chunks": [
+    {
+      "name": "nw",
+      "source_size": [
+        1448,
+        1086
+      ],
+      "chunk_size": [
+        1448,
+        1086
+      ],
+      "pixel_origin_top_left": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "ne",
+      "source_size": [
+        1448,
+        1086
+      ],
+      "chunk_size": [
+        1448,
+        1086
+      ],
+      "pixel_origin_top_left": [
+        1448,
+        0
+      ]
+    },
+    {
+      "name": "sw",
+      "source_size": [
+        1447,
+        1087
+      ],
+      "chunk_size": [
+        1448,
+        1086
+      ],
+      "pixel_origin_top_left": [
+        0,
+        1086
+      ]
+    },
+    {
+      "name": "se",
+      "source_size": [
+        1448,
+        1086
+      ],
+      "chunk_size": [
+        1448,
+        1086
+      ],
+      "pixel_origin_top_left": [
+        1448,
+        1086
+      ]
+    }
+  ],
+  "note": "AI image layout reference only; not a Unity scene or validated navigation grid."
+}

@@ -46,5 +46,7 @@ sysinfo.txt
 .env
 .env.*
 !.env.example
+/Tools/ImageGen/.venv/
+/tmp/imagegen/
 *.keystore
 *.jks

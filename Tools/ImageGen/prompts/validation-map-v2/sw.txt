@@ -1,0 +1,26 @@
+Use case: stylized-concept
+Asset type: one quarter of a continuous four-image playable exploration map.
+Primary request: create a new map section that belongs visually to the ORIGINAL GAME SCREENSHOTS, with their chunky hand-authored pixel sprites, broad ground shapes, dark stepped outlines and visible upright stone-wall faces. Correct the previous direction: the intended visual language is the screenshot game environment.
+
+Input roles, in order:
+Image 1 is the PRIMARY ORIGINAL STYLE REFERENCE: copy its coarse pixel size, green ground and warm brown dirt relationships, compact outlined sprites and simple contact shadows.
+Image 2 is the ORIGINAL TERRAIN REFERENCE: copy the way broad irregular dirt clearings meet green ground through chunky stepped edges, and the generous movement spaces.
+Image 3 is the ORIGINAL STONE-WALL REFERENCE: copy its thick grey-violet masonry, visible wall top and substantial front face. It also establishes how large stone blocks are relative to objects.
+Image 4 is a ROUGH LOCAL LAYOUT GUIDE only: follow its path crossings, landmark footprints and container positions, but redraw every shape in Images 1-3's visual language. The blockout's smooth diagonals and rectangles are not final artwork.
+The original references take priority for the art. Do not reproduce their people, trees, plants, furniture, combat effects, menus or text.
+
+Style and scale: genuine coarse low-resolution 2D pixel-game scene, as if drawn at approximately 362x272 logical pixels and enlarged to the output. Most contour steps and details are 4-6 output pixels, with the SAME pixel size for terrain, walls, rocks and containers. Compact dark outlines about one logical pixel; materials have three or four separate flat shades, no smooth modeling. The imagined player is 55-65 output pixels tall, but is NOT drawn. Containers are about 50-65 pixels wide. Stone walls have a 25-35 pixel top and a 60-80 pixel visible front face, with broad readable brick courses like Image 3. Walls are upright masonry, with front faces much taller than a thin line. Rocks are low rough stone outcrops with broad layered angular planes and stepped silhouettes. Containers should read as pixel sprites, not tiny realistic objects.
+
+Camera: orthographic game view from above with visible front faces, just like the screenshots; horizontal/vertical wall axes. No diamond isometric grid, perspective, horizon, bird's-eye plan symbols or miniature presentation.
+
+Ground: predominantly quiet muted green ground, interrupted by broad warm-brown dirt lanes and irregular clearings. The green is a FLAT GROUND MATERIAL; do not add individual grass blades or plants. Grey-violet masonry floor patches identify ruins. Dirt paths vary in width and form open clearings, gentle bends and asymmetrical forks. Use a handful of large, low-contrast angular ground marks. No uniform paved-road network, asphalt, repeated rectangular concrete yards, evenly spaced tiny props or decorative surrounding rock frame.
+
+Only five object classes are allowed: flat ground, dirt paths, stone walls, large solid rock obstacles, closed recognizable containers. Use wooden crates, iron-banded wooden chests and blue-grey equipment chests with simple locks, as indicated by Image 4. Keep container silhouettes distinct and leave room to walk around them. No modern filing cabinets or tool-workshop theme. No roofs or complete buildings.
+
+Pixel clarity and exclusions: crisp stepped color clusters, no antialiasing, soft brushwork, blur, gradients, tiny material rendering or pixel-filtered illustration. Absolutely no dense pebbles, round raised dots, bead-like highlights, bumps, pores, stippling, dithering or noisy ground. No trees, bushes, grass tufts, flowers, mushrooms, people, enemies, machines, vehicles, lamps, signs, UI, letters, arrows, map markers, frames, black bars or watermarks.
+
+This is a CROPPED SECTION of a larger continuous world, not a complete enclosed level. Ground and paths continue to the canvas edge. Keep the last 96 pixels of shared edges plain and close to the layout guide, with no new walls, rocks, containers or ground decorations. Road centers and widths at the specified crossings must be preserved. All openings and ground lanes remain freely traversable; exploration sites can be bypassed.
+
+Local section: southwest arrival clearing. Broad asymmetric brown dirt forks cross muted green ground. One open stone store recess sits toward the upper-middle; a short independent L wall forms a small lower-left search pocket. Place six CLOSED containers as in the guide, including several away from the direct main route. A few separated large angular outcrops shape the outer detour. Keep more open ground here than in the northwest ruins.
+Shared edges: TOP dirt crossings centered at x=300 and x=1100 of 1448; RIGHT crossings at y=300 and y=800 of 1086. The entrance-like dirt opening reaches the LEFT edge at y=300. Other shared-edge pixels are green ground. No enclosing border.
+
