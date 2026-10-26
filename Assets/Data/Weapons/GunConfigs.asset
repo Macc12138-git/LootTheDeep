@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec63815e7d554530b74c0e2c4ec0c16e, type: 3}
+  m_Name: GunConfigs
+  m_EditorClassIdentifier: Assembly-CSharp::LootTheDeep.Weapons.GunConfigTableSO
+  guns:
+  - id: placeholder_gun
+    displayName: "\u5360\u4F4D\u6B66\u5668"
+    magazineCapacity: 50
+    roundsPerMinute: 600
+    reloadSeconds: 1.8
+    spreadDegrees: 3
+    baseDamage: 30
+    projectileSpeed: 20
+    projectilePrefab: {fileID: 4587428958784357011, guid: 08e4c1b046fdd4cd599e6e056667da41, type: 3}
+  - id: prototype_main
+    displayName: MAIN WEAPON
+    magazineCapacity: 6
+    roundsPerMinute: 85.71429
+    reloadSeconds: 1.8
+    spreadDegrees: 0
+    baseDamage: 30
+    projectileSpeed: 10
+    projectilePrefab: {fileID: 7427900501700141886, guid: 72d5a75be256c4b6d938bd499178b548, type: 3}
+  - id: prototype_secondary
+    displayName: SECONDARY WEAPON
+    magazineCapacity: 24
+    roundsPerMinute: 400
+    reloadSeconds: 1.4
+    spreadDegrees: 0
+    baseDamage: 8
+    projectileSpeed: 17
+    projectilePrefab: {fileID: 3039638872095789740, guid: f6a5cbd5460b449cba2563c572bc8f7b, type: 3}

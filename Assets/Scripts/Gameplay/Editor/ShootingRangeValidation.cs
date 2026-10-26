@@ -83,7 +83,7 @@ namespace LootTheDeep.Gameplay.EditorTools
                         .SetValue(shooter, (Vector2)farTarget.transform.position);
                     typeof(PlayerShooter2D).GetMethod("TryFire", BindingFlags.Instance | BindingFlags.NonPublic)
                         .Invoke(shooter, null);
-                    Check(shooter.ActiveWeapon.Ammo == 23, "secondary shot spent one test round");
+                    Check(shooter.ActiveGun.Ammo == 23, "secondary shot spent one test round");
                     Check(shooter.ActiveWeapon.muzzleFlash.gameObject.activeSelf, "active muzzle flash shown");
                     step = 3;
                     nextCheckAt = EditorApplication.timeSinceStartup + 1.1;
@@ -106,8 +106,9 @@ namespace LootTheDeep.Gameplay.EditorTools
             var weapon = shooter.ActiveWeapon;
             Vector2 start = weapon.muzzle.position;
             Vector2 direction = ((Vector2)target.transform.position - start).normalized;
-            var projectile = Object.Instantiate(weapon.projectilePrefab, start, Quaternion.identity);
-            projectile.Fire(direction, weapon.projectileSpeed, weapon.damage, shooter.GetComponent<Collider2D>());
+            var config = shooter.ActiveGunConfig;
+            var projectile = Object.Instantiate(config.projectilePrefab, start, Quaternion.identity);
+            projectile.Fire(direction, config.projectileSpeed, config.baseDamage, shooter.GetComponent<Collider2D>());
         }
 
         private static void Check(bool condition, string message)

@@ -52,9 +52,10 @@ namespace LootTheDeep.Gameplay.EditorTools
                     Check(inventory != null && session != null && player.CurrentHealth == 100, "combat loaded");
                     Check(Object.FindObjectsByType<EnemyCombat2D>(FindObjectsSortMode.None).Length == 2,
                         "both enemies loaded");
-                    shooter.ActiveWeapon.Ammo = 2;
+                    for (int i = 0; i < shooter.ActiveGunConfig.magazineCapacity - 2; i++)
+                        shooter.ActiveGun.TryFire(Vector2.right, i * (shooter.ActiveGunConfig.ShotInterval + .001f), out _);
                     shooter.Reload();
-                    Check(shooter.ActiveWeapon.IsReloading, "main reload started");
+                    Check(shooter.ActiveGun.IsReloading, "main reload started");
                     inventory.Open(null);
                     Check(inventory.IsOpen, "inventory open during reload");
                     step = 1;
@@ -75,7 +76,7 @@ namespace LootTheDeep.Gameplay.EditorTools
                 if (step == 2)
                 {
                     shooter.SelectWeapon(0);
-                    Check(shooter.ActiveWeapon.Ammo == 6 && !shooter.ActiveWeapon.IsReloading,
+                    Check(shooter.ActiveGun.Ammo == 6 && !shooter.ActiveGun.IsReloading,
                         "reload completed after switching weapons and opening inventory");
                     inventory.Close();
                     shooter.GetComponent<Rigidbody2D>().position = new Vector2(15f, -4.5f);
@@ -89,7 +90,7 @@ namespace LootTheDeep.Gameplay.EditorTools
                     shooter.GetComponent<Rigidbody2D>().position = new Vector2(0f, -8f);
                     var enemy = GameObject.Find("Scavenger").GetComponent<CombatHealth2D>();
                     Vector2 origin = (Vector2)enemy.transform.position + Vector2.left;
-                    var projectile = Object.Instantiate(shooter.ActiveWeapon.projectilePrefab, origin, Quaternion.identity);
+                    var projectile = Object.Instantiate(shooter.ActiveGunConfig.projectilePrefab, origin, Quaternion.identity);
                     projectile.Fire(Vector2.right, 8f, 30, shooter.GetComponent<Collider2D>());
                     step = 4;
                     nextCheckAt = EditorApplication.timeSinceStartup + .5;

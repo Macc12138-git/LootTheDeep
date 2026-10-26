@@ -5,6 +5,7 @@
 - 历史版本：[游戏概念方案 V0.2](GameConcept-v0.2.md)（水下主题，供历史参考）。
 - 专题方案：[物资与掉落概念方案 V0.1](LootAndDropConcept-v0.1.md)（概念草案，含待验证的测试数值）。
 - 开发方案：[区域容器管理与爆率配置 V0.1](RegionContainerLootDevPlan-v0.1.md)（已接入首版工具；使用方式与边界见[使用说明](RegionContainerLootUsage.md)）。
+- 枪械配置：[枪械配置与武器系统使用说明](GunConfigurationUsage.md)（独立配置表、射速、弹匣、换弹与随机分散）。
 - 用途：供新加入项目的人或另一台机器上的 Codex 快速理解设计方向。
 - 阶段：概念设计与局部原型验证；已实现范围以专题使用说明和工程为准，不代表完整玩法闭环已实现。
 

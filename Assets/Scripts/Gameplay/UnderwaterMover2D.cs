@@ -10,6 +10,7 @@ namespace LootTheDeep.Gameplay
     {
         [Header("Movement")]
         [SerializeField, Min(0f)] private float moveSpeed = 4.5f;
+        [SerializeField] private bool instantMovement;
         [SerializeField, Min(0f)] private float acceleration = 14f;
         [SerializeField, Min(0f)] private float deceleration = 18f;
 
@@ -20,6 +21,7 @@ namespace LootTheDeep.Gameplay
         [Header("Presentation")]
         [SerializeField] private Transform visualRoot;
         [SerializeField] private Animator animator;
+        [SerializeField] private bool faceAimDirection;
 
         private static readonly int IsMovingParameter = Animator.StringToHash("IsMoving");
 
@@ -51,6 +53,11 @@ namespace LootTheDeep.Gameplay
             visualRoot = objectVisual;
         }
 
+        public void SetAimDirection(Vector2 direction)
+        {
+            if (faceAimDirection) RefreshFacing(direction.x);
+        }
+
         private void Awake()
         {
             body = GetComponent<Rigidbody2D>();
@@ -75,12 +82,15 @@ namespace LootTheDeep.Gameplay
             moveInput = Vector2.ClampMagnitude(moveInput, 1f);
             RefreshAnimation();
 
-            if (visualRoot != null && Mathf.Abs(moveInput.x) > 0.01f)
-            {
-                Vector3 scale = visualRoot.localScale;
-                scale.x = Mathf.Abs(scale.x) * Mathf.Sign(moveInput.x);
-                visualRoot.localScale = scale;
-            }
+            if (!faceAimDirection) RefreshFacing(moveInput.x);
+        }
+
+        private void RefreshFacing(float horizontalDirection)
+        {
+            if (visualRoot == null || Mathf.Abs(horizontalDirection) <= 0.01f) return;
+            Vector3 scale = visualRoot.localScale;
+            scale.x = Mathf.Abs(scale.x) * Mathf.Sign(horizontalDirection);
+            visualRoot.localScale = scale;
         }
 
         private void OnDisable()
@@ -100,7 +110,9 @@ namespace LootTheDeep.Gameplay
             if (inventoryOpen || combatEnded) { body.linearVelocity = Vector2.zero; return; }
             Vector2 targetVelocity = moveInput * moveSpeed;
             float changeRate = moveInput.sqrMagnitude > 0.001f ? acceleration : deceleration;
-            Vector2 velocity = Vector2.MoveTowards(body.linearVelocity, targetVelocity, changeRate * Time.fixedDeltaTime);
+            Vector2 velocity = instantMovement
+                ? targetVelocity
+                : Vector2.MoveTowards(body.linearVelocity, targetVelocity, changeRate * Time.fixedDeltaTime);
 
             Vector2 projectedPosition = body.position + velocity * Time.fixedDeltaTime;
             Vector2 clampedPosition = new(

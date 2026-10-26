@@ -1,5 +1,6 @@
 using System;
 using LootTheDeep.Inventory;
+using LootTheDeep.Weapons;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,30 +13,21 @@ namespace LootTheDeep.Gameplay
         [Serializable]
         public sealed class WeaponSlot
         {
-            public string displayName;
+            public string weaponId;
             public GameObject visual;
             public Transform muzzle;
             public SpriteRenderer muzzleFlash;
-            public ShootingProjectile2D projectilePrefab;
-            [Min(1)] public int damage;
-            [Min(0.01f)] public float fireInterval;
-            [Min(0.1f)] public float projectileSpeed;
-            [Min(0)] public int initialAmmo;
-            [Min(0.1f)] public float reloadSeconds = 1.8f;
-
-            [NonSerialized] public int Ammo;
-            [NonSerialized] public float NextShotAt;
+            [NonSerialized] public GunRuntime Gun;
             [NonSerialized] public float FlashUntil;
-            [NonSerialized] public float ReloadRemaining;
-            public bool IsReloading => ReloadRemaining > 0f;
-            public float ReloadProgress => IsReloading ? 1f - ReloadRemaining / reloadSeconds : 0f;
         }
 
+        [SerializeField] private GunConfigTableSO gunConfigs;
         [SerializeField] private Transform weaponPivot;
         [SerializeField] private WeaponSlot[] weapons;
         [SerializeField, Min(0f)] private float minimumMuzzleDistance = 0.08f;
 
         private PlayerInput playerInput;
+        private UnderwaterMover2D mover;
         private InputAction aimPointAction;
         private InputAction attackAction;
         private InputAction previousAction;
@@ -56,24 +48,32 @@ namespace LootTheDeep.Gameplay
 
         public int ActiveWeaponIndex => activeIndex;
         public WeaponSlot ActiveWeapon => weapons != null && weapons.Length > activeIndex ? weapons[activeIndex] : null;
+        public GunRuntime ActiveGun => ActiveWeapon?.Gun;
+        public GunConfig ActiveGunConfig => ActiveWeapon == null ? null : gunConfigs?.Find(ActiveWeapon.weaponId);
 
-        public void Configure(Transform pivot, WeaponSlot mainWeapon, WeaponSlot secondaryWeapon)
+        public void Configure(GunConfigTableSO configs, Transform pivot, params WeaponSlot[] slots)
         {
+            gunConfigs = configs;
             weaponPivot = pivot;
-            weapons = new[] { mainWeapon, secondaryWeapon };
+            weapons = slots;
         }
 
         private void Awake()
         {
             playerInput = GetComponent<PlayerInput>();
+            mover = GetComponent<UnderwaterMover2D>();
             ownerCollider = GetComponent<Collider2D>();
             health = GetComponent<CombatHealth2D>();
             if (weapons == null) return;
             foreach (WeaponSlot weapon in weapons)
             {
-                weapon.Ammo = weapon.initialAmmo;
-                weapon.NextShotAt = 0f;
-                weapon.ReloadRemaining = 0f;
+                GunConfig config = gunConfigs?.Find(weapon.weaponId);
+                if (config == null)
+                {
+                    Debug.LogError("枪械配置表缺少武器：" + weapon.weaponId, this);
+                    continue;
+                }
+                weapon.Gun = new GunRuntime(config);
             }
             SelectWeapon(0);
         }
@@ -102,12 +102,9 @@ namespace LootTheDeep.Gameplay
             if (weapons != null)
                 foreach (WeaponSlot weapon in weapons)
                 {
-                    if (weapon.IsReloading && health != null && !health.IsDead &&
+                    if ((health == null || !health.IsDead) &&
                         (session == null || !session.IsFinished))
-                    {
-                        weapon.ReloadRemaining = Mathf.Max(0f, weapon.ReloadRemaining - Time.deltaTime);
-                        if (!weapon.IsReloading) weapon.Ammo = weapon.initialAmmo;
-                    }
+                        weapon.Gun?.Tick(Time.deltaTime);
                     if (weapon.muzzleFlash != null && weapon.muzzleFlash.gameObject.activeSelf &&
                         Time.time >= weapon.FlashUntil)
                         weapon.muzzleFlash.gameObject.SetActive(false);
@@ -120,7 +117,7 @@ namespace LootTheDeep.Gameplay
             RefreshWeaponHud();
             hud?.SetCombatActive(playable, inventory != null && inventory.IsOpen &&
                 (health == null || !health.IsDead) && (session == null || !session.IsFinished));
-            if (!playable || weaponPivot == null || ActiveWeapon?.muzzle == null) return;
+            if (!playable || weaponPivot == null || ActiveWeapon?.muzzle == null || ActiveGun == null) return;
 
             if (previousAction?.WasPressedThisFrame() == true) SelectWeapon(0);
             if (nextAction?.WasPressedThisFrame() == true) SelectWeapon(1);
@@ -138,6 +135,7 @@ namespace LootTheDeep.Gameplay
                 Vector2 pivotDirection = aimWorldPoint - (Vector2)weaponPivot.position;
                 if (pivotDirection.sqrMagnitude > 0.0001f)
                 {
+                    mover?.SetAimDirection(pivotDirection);
                     float angle = Mathf.Atan2(pivotDirection.y, pivotDirection.x) * Mathf.Rad2Deg;
                     weaponPivot.rotation = Quaternion.Euler(0f, 0f, angle);
                     Vector2 muzzleToAim = aimWorldPoint - (Vector2)ActiveWeapon.muzzle.position;
@@ -160,27 +158,23 @@ namespace LootTheDeep.Gameplay
 
         public void Reload()
         {
-            WeaponSlot weapon = ActiveWeapon;
-            if (weapon == null || weapon.IsReloading || weapon.Ammo >= weapon.initialAmmo ||
-                health != null && health.IsDead || session != null && session.IsFinished) return;
-            weapon.ReloadRemaining = weapon.reloadSeconds;
+            if (health != null && health.IsDead || session != null && session.IsFinished) return;
+            ActiveGun?.StartReload();
             RefreshWeaponHud();
         }
 
         private void TryFire()
         {
             WeaponSlot weapon = ActiveWeapon;
-            if (weapon == null || weapon.projectilePrefab == null || weapon.IsReloading ||
-                Time.time < weapon.NextShotAt || weapon.Ammo <= 0 ||
+            GunRuntime gun = ActiveGun;
+            if (gun == null || gun.Config.projectilePrefab == null ||
                 health != null && health.IsDead || session != null && session.IsFinished) return;
 
             Vector2 origin = weapon.muzzle.position;
-            Vector2 direction = (aimWorldPoint - origin).normalized;
-            ShootingProjectile2D projectile = Instantiate(weapon.projectilePrefab, origin,
+            if (!gun.TryFire(aimWorldPoint - origin, Time.time, out Vector2 direction)) return;
+            ShootingProjectile2D projectile = Instantiate(gun.Config.projectilePrefab, origin,
                 Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg));
-            projectile.Fire(direction, weapon.projectileSpeed, weapon.damage, ownerCollider);
-            weapon.Ammo--;
-            weapon.NextShotAt = Time.time + weapon.fireInterval;
+            projectile.Fire(direction, gun.Config.projectileSpeed, gun.Config.baseDamage, ownerCollider);
             CombatNoise2D.Emit(transform.position, 8f);
             if (weapon.muzzleFlash != null)
             {
@@ -192,9 +186,9 @@ namespace LootTheDeep.Gameplay
 
         private void RefreshWeaponHud()
         {
-            WeaponSlot weapon = ActiveWeapon;
-            if (weapon != null && hud != null)
-                hud.SetWeapon(weapon.displayName, weapon.Ammo, weapon.IsReloading, weapon.ReloadProgress);
+            GunRuntime gun = ActiveGun;
+            if (gun != null && hud != null)
+                hud.SetWeapon(gun.Config.displayName, gun.Ammo, gun.IsReloading, gun.ReloadProgress);
         }
 
         private void SetCombatCursor(bool active)

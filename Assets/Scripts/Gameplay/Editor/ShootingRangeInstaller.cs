@@ -1,4 +1,5 @@
 using System;
+using LootTheDeep.Weapons;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -35,10 +36,12 @@ namespace LootTheDeep.Gameplay.EditorTools
             Font font = AssetDatabase.LoadAssetAtPath<Font>(FontPath);
             if (square == null || font == null) throw new InvalidOperationException("Prototype sprite or HUD font is missing.");
 
-            ShootingProjectile2D mainShot = EnsureProjectile(MainShotPath, square, new Color(1f, 0.79f, 0.36f), 0.22f);
-            ShootingProjectile2D secondaryShot = EnsureProjectile(SecondaryShotPath, square, new Color(0.37f, 0.89f, 0.91f), 0.13f);
+            EnsureProjectile(MainShotPath, square, new Color(1f, 0.79f, 0.36f), 0.22f);
+            EnsureProjectile(SecondaryShotPath, square, new Color(0.37f, 0.89f, 0.91f), 0.13f);
             TargetDummy2D target = EnsureTarget(square);
-            EnsurePlayer(square, mainShot, secondaryShot);
+            var configs = AssetDatabase.LoadAssetAtPath<GunConfigTableSO>("Assets/Data/Weapons/GunConfigs.asset");
+            if (configs == null) throw new InvalidOperationException("Gun configuration table is missing.");
+            EnsurePlayer(square, configs);
 
             GameObject gameplay = GameObject.Find("Gameplay");
             if (gameplay == null) throw new InvalidOperationException("ExploreScene Gameplay root is missing.");
@@ -122,7 +125,7 @@ namespace LootTheDeep.Gameplay.EditorTools
             return prefab.GetComponent<TargetDummy2D>();
         }
 
-        private static void EnsurePlayer(Sprite sprite, ShootingProjectile2D mainShot, ShootingProjectile2D secondaryShot)
+        private static void EnsurePlayer(Sprite sprite, GunConfigTableSO configs)
         {
             GameObject contents = PrefabUtility.LoadPrefabContents(PlayerPath);
             try
@@ -146,12 +149,12 @@ namespace LootTheDeep.Gameplay.EditorTools
 
                 PlayerShooter2D.WeaponSlot main = MakeWeapon(pivot, "MainWeapon", sprite,
                     new Color(1f, 0.79f, 0.36f), new Vector3(0.38f, 0f, 0f),
-                    new Vector3(0.68f, 0.17f, 1f), 0.76f, mainShot, 30, 0.7f, 10f, 6);
+                    new Vector3(0.68f, 0.17f, 1f), 0.76f, "prototype_main");
                 PlayerShooter2D.WeaponSlot secondary = MakeWeapon(pivot, "SecondaryWeapon", sprite,
                     new Color(0.37f, 0.89f, 0.91f), new Vector3(0.31f, 0f, 0f),
-                    new Vector3(0.5f, 0.11f, 1f), 0.63f, secondaryShot, 8, 0.15f, 17f, 24);
+                    new Vector3(0.5f, 0.11f, 1f), 0.63f, "prototype_secondary");
 
-                contents.AddComponent<PlayerShooter2D>().Configure(pivot, main, secondary);
+                contents.AddComponent<PlayerShooter2D>().Configure(configs, pivot, main, secondary);
                 secondary.visual.SetActive(false);
                 PrefabUtility.SaveAsPrefabAsset(contents, PlayerPath);
             }
@@ -159,8 +162,7 @@ namespace LootTheDeep.Gameplay.EditorTools
         }
 
         private static PlayerShooter2D.WeaponSlot MakeWeapon(Transform pivot, string name, Sprite sprite,
-            Color tint, Vector3 position, Vector3 scale, float muzzleX, ShootingProjectile2D shot,
-            int damage, float interval, float speed, int ammo)
+            Color tint, Vector3 position, Vector3 scale, float muzzleX, string weaponId)
         {
             Transform visual = Child(pivot, name);
             SpriteRenderer renderer = visual.gameObject.AddComponent<SpriteRenderer>();
@@ -175,15 +177,10 @@ namespace LootTheDeep.Gameplay.EditorTools
             muzzle.localPosition = new Vector3((muzzleX - position.x) / scale.x, 0f, 0f);
             return new PlayerShooter2D.WeaponSlot
             {
-                displayName = name == "MainWeapon" ? "MAIN WEAPON" : "SECONDARY WEAPON",
+                weaponId = weaponId,
                 visual = visual.gameObject,
                 muzzle = muzzle,
-                muzzleFlash = EnsureFlash(muzzle, sprite),
-                projectilePrefab = shot,
-                damage = damage,
-                fireInterval = interval,
-                projectileSpeed = speed,
-                initialAmmo = ammo
+                muzzleFlash = EnsureFlash(muzzle, sprite)
             };
         }
 

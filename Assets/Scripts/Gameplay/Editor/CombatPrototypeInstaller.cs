@@ -36,10 +36,6 @@ namespace LootTheDeep.Gameplay.EditorTools
                 var shooter = contents.GetComponent<PlayerShooter2D>();
                 if (shooter == null) throw new InvalidOperationException("Install the shooting range first.");
                 shooter.SelectWeapon(0);
-                shooter.ActiveWeapon.reloadSeconds = 1.8f;
-                shooter.SelectWeapon(1);
-                shooter.ActiveWeapon.reloadSeconds = 1.4f;
-                shooter.SelectWeapon(0);
                 var hull = contents.GetComponent<CombatHealth2D>();
                 if (hull == null) hull = contents.AddComponent<CombatHealth2D>();
                 hull.Configure(CombatTeam.Player, 100, contents.transform.Find("Visual/Body").GetComponent<SpriteRenderer>());
@@ -82,7 +78,7 @@ namespace LootTheDeep.Gameplay.EditorTools
                 Object.FindFirstObjectByType<ExtractionPoint2D>() == null ||
                 Object.FindFirstObjectByType<CombatPrototypeSession2D>() == null)
                 throw new InvalidOperationException("Combat prototype scene references are incomplete.");
-            if (player.ActiveWeapon.reloadSeconds <= 0f)
+            if (player.ActiveGunConfig == null || player.ActiveGunConfig.reloadSeconds <= 0f)
                 throw new InvalidOperationException("Weapon reload time is missing.");
         }
 

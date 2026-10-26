@@ -255,28 +255,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05294d408e5964dacb6dee2349616021, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LootTheDeep.Gameplay.PlayerShooter2D
+  gunConfigs: {fileID: 11400000, guid: 4e89982880a5427da1ce0784cf2da6e0, type: 2}
   weaponPivot: {fileID: 7831502472453933220}
   weapons:
-  - displayName: MAIN WEAPON
+  - weaponId: prototype_main
     visual: {fileID: 1033125098460226395}
     muzzle: {fileID: 854500548909051362}
     muzzleFlash: {fileID: 8259551478232526095}
-    projectilePrefab: {fileID: 7427900501700141886, guid: 72d5a75be256c4b6d938bd499178b548, type: 3}
-    damage: 30
-    fireInterval: 0.7
-    projectileSpeed: 10
-    initialAmmo: 6
-    reloadSeconds: 1.8
-  - displayName: SECONDARY WEAPON
+  - weaponId: prototype_secondary
     visual: {fileID: 423975211070324764}
     muzzle: {fileID: 3935458396130316980}
     muzzleFlash: {fileID: 5416375310551257518}
-    projectilePrefab: {fileID: 3039638872095789740, guid: f6a5cbd5460b449cba2563c572bc8f7b, type: 3}
-    damage: 8
-    fireInterval: 0.15
-    projectileSpeed: 17
-    initialAmmo: 24
-    reloadSeconds: 1.4
   minimumMuzzleDistance: 0.08
 --- !u!114 &7967108630953705906
 MonoBehaviour:
