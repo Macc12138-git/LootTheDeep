@@ -149,6 +149,7 @@ namespace LootTheDeep.Gameplay.EditorTools
             Image fill = Image(track.transform, "Fill", Vector2.zero, new Vector2(250f, 8f),
                 new Color(.36f, .94f, .7f));
             fill.type = UnityEngine.UI.Image.Type.Filled;
+            fill.sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/PrototypeSquare.png");
             fill.fillMethod = UnityEngine.UI.Image.FillMethod.Horizontal;
             fill.fillOrigin = 0;
             Text label = Label(group, "ReloadLabel", font, "换弹中", new Vector2(0f, -3f),
@@ -156,7 +157,7 @@ namespace LootTheDeep.Gameplay.EditorTools
             hud.ConfigureReload(group, fill, label);
         }
 
-        private static void EnsureSession(CombatHealth2D player, Font font)
+        internal static void EnsureSession(CombatHealth2D player, Font font)
         {
             if (Object.FindFirstObjectByType<CombatPrototypeSession2D>() != null) return;
             var root = new GameObject("CombatPrototypeHUD", typeof(RectTransform), typeof(Canvas),
@@ -178,6 +179,7 @@ namespace LootTheDeep.Gameplay.EditorTools
             Image hpFill = Image(hpTrack.transform, "HullFill", Vector2.zero,
                 new Vector2(240f, 9f), new Color(.42f, .9f, .63f));
             hpFill.type = UnityEngine.UI.Image.Type.Filled;
+            hpFill.sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Sprites/PrototypeSquare.png");
             hpFill.fillMethod = UnityEngine.UI.Image.FillMethod.Horizontal;
             Text exit = Label(root.transform, "ExtractionPrompt", font, "", new Vector2(0f, 95f),
                 new Vector2(560f, 40f), TextAnchor.MiddleCenter, 24);

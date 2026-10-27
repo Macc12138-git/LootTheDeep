@@ -25,6 +25,7 @@ namespace LootTheDeep.Gameplay
             ownerCollider = owner;
             ownerHealth = owner == null ? null : owner.GetComponentInParent<CombatHealth2D>();
             damage = shotDamage;
+            body.rotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             if (ownerCollider != null)
                 foreach (Collider2D hitbox in ownerCollider.GetComponentsInChildren<Collider2D>())
                     Physics2D.IgnoreCollision(projectileCollider, hitbox);

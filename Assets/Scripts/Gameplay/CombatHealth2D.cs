@@ -38,14 +38,18 @@ namespace LootTheDeep.Gameplay
         {
             if (amount <= 0 || IsDead) return;
             currentHealth = Mathf.Max(0, currentHealth - amount);
-            if (visual != null) { visual.color = Color.white; flashUntil = Time.time + 0.12f; }
+            if (visual != null)
+            {
+                visual.color = new Color(1f, .3f, .3f, baseColor.a);
+                flashUntil = Time.time + 0.12f;
+            }
             Changed?.Invoke(this);
             if (IsDead) Died?.Invoke(this);
         }
 
         private void Update()
         {
-            if (visual != null && Time.time >= flashUntil && visual.color != baseColor)
+            if (visual != null && Time.time >= flashUntil)
                 visual.color = IsDead ? new Color(baseColor.r, baseColor.g, baseColor.b, 0.4f) : baseColor;
         }
     }

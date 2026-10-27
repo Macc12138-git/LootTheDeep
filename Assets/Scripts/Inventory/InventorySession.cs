@@ -43,8 +43,7 @@ namespace LootTheDeep.Inventory
         private void Update()
         {
             if (View == null || player == null) return;
-            if (IsOpen && Target != null && (!Target.isActiveAndEnabled ||
-                Vector2.Distance(player.transform.position, Target.transform.position) > interactDistance)) Close();
+            if (IsOpen && Target != null && !CanInteract(Target)) Close();
             // Also handle a container destroyed while its page was open.
             if (IsOpen && View.HasContainer && Target == null) Close();
             if (!IsOpen) FindNearby();
@@ -56,7 +55,7 @@ namespace LootTheDeep.Inventory
                     if (View.IsDragging) View.CancelDrag(); else Close();
                 }
                 else if (keyboard.tabKey.wasPressedThisFrame) { if (IsOpen) Close(); else Open(null); }
-                else if (keyboard.eKey.wasPressedThisFrame && !IsOpen && nearby != null) Open(nearby);
+                else if (keyboard.fKey.wasPressedThisFrame && !IsOpen && nearby != null) Open(nearby);
                 if (IsOpen && keyboard.rKey.wasPressedThisFrame) View.Rotate();
             }
             if (IsOpen && Target != null)
@@ -73,7 +72,7 @@ namespace LootTheDeep.Inventory
             {
                 if (container == null || !container.isActiveAndEnabled || container.Contents == null) continue;
                 float next = Vector2.Distance(player.transform.position, container.transform.position);
-                if (next <= distance) { distance = next; candidate = container; }
+                if (next <= distance && CanInteract(container)) { distance = next; candidate = container; }
             }
             if (nearby != candidate)
             {
@@ -81,11 +80,26 @@ namespace LootTheDeep.Inventory
                 nearby = candidate;
                 if (nearby != null) nearby.Highlight(true);
             }
-            View.SetPrompt(nearby == null ? "Tab  随身物品" : "E  搜索 · " + nearby.displayName + "     Tab  随身物品");
+            View.SetPrompt(nearby == null ? "Tab  随身物品" : "F  搜索 · " + nearby.displayName + "     Tab  随身物品");
+        }
+        private bool CanInteract(SearchableContainer container)
+        {
+            if (player == null || !container.isActiveAndEnabled || container.Contents == null ||
+                Vector2.Distance(player.transform.position, container.transform.position) > interactDistance) return false;
+            foreach (var hit in Physics2D.LinecastAll(player.transform.position, container.transform.position))
+            {
+                var collider = hit.collider;
+                if (collider.isTrigger || collider.transform.IsChildOf(player.transform) ||
+                    collider.transform.IsChildOf(container.transform) ||
+                    collider.attachedRigidbody != null && collider.attachedRigidbody.bodyType != RigidbodyType2D.Static)
+                    continue;
+                return false;
+            }
+            return true;
         }
         public void Open(SearchableContainer container)
         {
-            if (View == null || (container != null && container.Contents == null)) return;
+            if (View == null || (container != null && !CanInteract(container))) return;
             if (!IsOpen)
             {
                 previousLock = Cursor.lockState; previousCursor = Cursor.visible; hasCursorState = true;

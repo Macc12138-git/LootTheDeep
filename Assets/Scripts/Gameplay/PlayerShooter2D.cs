@@ -171,6 +171,14 @@ namespace LootTheDeep.Gameplay
                 health != null && health.IsDead || session != null && session.IsFinished) return;
 
             Vector2 origin = weapon.muzzle.position;
+            // A muzzle beyond a thin wall must not spawn a projectile on its other side.
+            foreach (RaycastHit2D hit in Physics2D.LinecastAll(weaponPivot.position, origin))
+            {
+                if (hit.collider.isTrigger || hit.collider.transform.IsChildOf(transform) ||
+                    hit.collider.GetComponent<ShootingProjectile2D>() != null) continue;
+                origin = weaponPivot.position;
+                break;
+            }
             if (!gun.TryFire(aimWorldPoint - origin, Time.time, out Vector2 direction)) return;
             ShootingProjectile2D projectile = Instantiate(gun.Config.projectilePrefab, origin,
                 Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg));

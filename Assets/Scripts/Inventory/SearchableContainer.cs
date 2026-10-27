@@ -18,7 +18,7 @@ namespace LootTheDeep.Inventory
         public string InitializationError { get; private set; }
         private bool initializationAttempted;
         private RegionContainerManager registeredRegion;
-        public string displayName = "沉船维修箱";
+        public string displayName = "物资箱";
         [Min(0.1f)] public float searchSeconds = 1.5f;
         [SerializeField, Min(1)] private int columns = 6;
         [SerializeField, Min(1)] private int rows = 4;

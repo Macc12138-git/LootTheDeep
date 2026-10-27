@@ -108,7 +108,7 @@ MonoBehaviour:
   lootMode: 1
   defaultTable: {fileID: 11400000, guid: c93ae88cd464849eca51c2bedb1a8b0c, type: 2}
   overrideTable: {fileID: 0}
-  displayName: "\u6C89\u8239\u7EF4\u4FEE\u7BB1"
+  displayName: "物资箱"
   searchSeconds: 1.5
   columns: 6
   rows: 4

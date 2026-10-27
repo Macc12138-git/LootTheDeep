@@ -1,6 +1,7 @@
 using System.Text;
 using LootTheDeep.Inventory;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -47,7 +48,7 @@ namespace LootTheDeep.Gameplay
 
         private void RefreshHealth(CombatHealth2D target)
         {
-            if (healthLabel != null) healthLabel.text = $"艇体  {target.CurrentHealth} / {target.MaxHealth}";
+            if (healthLabel != null) healthLabel.text = $"生命  {target.CurrentHealth} / {target.MaxHealth}";
             if (healthFill != null) healthFill.fillAmount = (float)target.CurrentHealth / target.MaxHealth;
         }
 
@@ -76,11 +77,13 @@ namespace LootTheDeep.Gameplay
                         if (count < 5) names.AppendLine(item.Definition.displayName);
                         count++;
                     }
-            if (resultTitle != null) resultTitle.text = extracted ? "已完成测试撤离" : "潜艇失去行动能力";
+            if (resultTitle != null) resultTitle.text = extracted ? "已完成测试撤离" : "行动失败";
             if (resultItems != null)
                 resultItems.text = extracted
                     ? $"本局带出 {count} 件物资（仅测试结算，尚未入库）\n{names}"
-                    : $"本局未撤出 {count} 件携带物资。\n重新开始可再试一次。";
+                    : inventory == null
+                        ? "你已失去行动能力。\n按 Enter 或点击下方按钮重新开始。"
+                        : $"本局未撤出 {count} 件携带物资。\n重新开始可再试一次。";
             if (resultPanel != null) resultPanel.SetActive(true);
             previousTimeScale = Time.timeScale;
             Time.timeScale = 0f;
@@ -90,6 +93,11 @@ namespace LootTheDeep.Gameplay
         {
             Time.timeScale = 1f;
             SceneManager.LoadScene(gameObject.scene.name);
+        }
+
+        private void Update()
+        {
+            if (IsFinished && Keyboard.current?.enterKey.wasPressedThisFrame == true) Restart();
         }
 
         private void OnApplicationFocus(bool focused)
