@@ -29,7 +29,8 @@ namespace LootTheDeep.Inventory.Editor
 
         static WorldSearchValidation() { EditorApplication.playModeStateChanged += OnPlayState; }
 
-        [MenuItem("LootTheDeep/搜索/验证地图搜索（运行测试） %#F4")]
+        // Five boxes and a box near spawn are fixtures of the demonstration layout only.
+        [MenuItem("LootTheDeep/搜索/验证演示布局搜索（运行测试） %#F4")]
         public static void Run()
         {
             var scene = SceneManager.GetActiveScene();

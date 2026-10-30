@@ -11,11 +11,15 @@ namespace LootTheDeep.Gameplay
         [SerializeField, Min(0f)] private float lookAheadResponsiveness = 4f;
         [SerializeField] private Vector2 horizontalRange = new(-30f, 30f);
         [SerializeField] private float maximumWorldY = 0f;
+        [SerializeField] private float minimumWorldY = -100000f;
 
         private Camera targetCamera;
         private Rigidbody2D targetBody;
         private Vector3 smoothVelocity;
         private Vector2 currentLookAhead;
+
+        public void ConfigureBounds(Rect bounds)
+        { horizontalRange = new Vector2(bounds.xMin, bounds.xMax); minimumWorldY = bounds.yMin; maximumWorldY = bounds.yMax; }
 
         public void Configure(Transform followTarget)
         {
@@ -88,7 +92,7 @@ namespace LootTheDeep.Gameplay
 
             return new Vector3(
                 ClampAxis(desiredPosition.x, horizontalRange.x + halfWidth, horizontalRange.y - halfWidth),
-                Mathf.Min(desiredPosition.y, maximumWorldY - halfHeight),
+                ClampAxis(desiredPosition.y, minimumWorldY + halfHeight, maximumWorldY - halfHeight),
                 transform.position.z);
         }
 

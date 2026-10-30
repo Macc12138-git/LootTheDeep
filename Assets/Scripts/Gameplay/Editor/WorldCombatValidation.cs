@@ -30,7 +30,8 @@ namespace LootTheDeep.Gameplay.EditorTools
             EditorApplication.playModeStateChanged += OnPlayState;
         }
 
-        [MenuItem("LootTheDeep/战斗/验证首版战斗（运行测试） %#F9")]
+        // This regression intentionally checks the original demonstration encounter, not arbitrary layouts.
+        [MenuItem("LootTheDeep/战斗/验证演示布局战斗（运行测试） %#F9")]
         public static void Run()
         {
             Scene scene = SceneManager.GetActiveScene();

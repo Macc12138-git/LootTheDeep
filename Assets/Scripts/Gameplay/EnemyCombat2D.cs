@@ -124,6 +124,8 @@ namespace LootTheDeep.Gameplay
 
         private void Update()
         {
+            // Update still runs at timeScale zero; do not start attacks or apply lunge contact damage.
+            if (Time.timeScale == 0f) return;
             if (health.IsDead || player == null || player.IsDead)
             {
                 CancelAttack();

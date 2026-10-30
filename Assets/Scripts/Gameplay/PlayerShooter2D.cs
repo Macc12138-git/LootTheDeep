@@ -42,6 +42,7 @@ namespace LootTheDeep.Gameplay
         private int activeIndex;
         private bool aimValid;
         private bool focused = true;
+        private bool waitForAttackRelease;
         private bool cursorBaselineCaptured;
         private bool previousCursorVisible;
         private CursorLockMode previousCursorLock;
@@ -99,6 +100,8 @@ namespace LootTheDeep.Gameplay
 
         private void LateUpdate()
         {
+            if (session != null && session.IsMapOpen) waitForAttackRelease = true;
+            if (attackAction?.IsPressed() != true) waitForAttackRelease = false;
             if (weapons != null)
                 foreach (WeaponSlot weapon in weapons)
                 {
@@ -112,7 +115,7 @@ namespace LootTheDeep.Gameplay
 
             bool playable = focused && targetCamera != null && hud != null && aimPointAction != null &&
                 (inventory == null || !inventory.IsOpen) && (health == null || !health.IsDead) &&
-                (session == null || !session.IsFinished);
+                (session == null || !session.GameplayInputBlocked);
             SetCombatCursor(playable);
             RefreshWeaponHud();
             hud?.SetCombatActive(playable, inventory != null && inventory.IsOpen &&
@@ -144,11 +147,12 @@ namespace LootTheDeep.Gameplay
             }
 
             hud.SetCrosshair(screenPoint, aimValid);
-            if (aimValid && attackAction?.IsPressed() == true) TryFire();
+            if (aimValid && !waitForAttackRelease && attackAction?.IsPressed() == true) TryFire();
         }
 
         public void SelectWeapon(int index)
         {
+            if (session != null && session.GameplayInputBlocked) return;
             if (weapons == null || index < 0 || index >= weapons.Length) return;
             activeIndex = index;
             for (int i = 0; i < weapons.Length; i++)
@@ -158,7 +162,7 @@ namespace LootTheDeep.Gameplay
 
         public void Reload()
         {
-            if (health != null && health.IsDead || session != null && session.IsFinished) return;
+            if (health != null && health.IsDead || session != null && session.GameplayInputBlocked) return;
             ActiveGun?.StartReload();
             RefreshWeaponHud();
         }
@@ -168,7 +172,7 @@ namespace LootTheDeep.Gameplay
             WeaponSlot weapon = ActiveWeapon;
             GunRuntime gun = ActiveGun;
             if (gun == null || gun.Config.projectilePrefab == null ||
-                health != null && health.IsDead || session != null && session.IsFinished) return;
+                health != null && health.IsDead || session != null && session.GameplayInputBlocked) return;
 
             Vector2 origin = weapon.muzzle.position;
             // A muzzle beyond a thin wall must not spawn a projectile on its other side.

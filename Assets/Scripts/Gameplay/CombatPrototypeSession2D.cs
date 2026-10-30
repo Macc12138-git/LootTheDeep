@@ -1,4 +1,6 @@
 using System.Text;
+using System.Linq;
+using LootTheDeep.Gameplay.Maps;
 using LootTheDeep.Inventory;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -7,6 +9,7 @@ using UnityEngine.UI;
 
 namespace LootTheDeep.Gameplay
 {
+    [DefaultExecutionOrder(-200)]
     public sealed class CombatPrototypeSession2D : MonoBehaviour
     {
         [SerializeField] private CombatHealth2D player;
@@ -23,7 +26,31 @@ namespace LootTheDeep.Gameplay
         private bool focusPaused;
         private bool hasFocus = true;
         private bool applicationPaused;
+        private bool pauseApplied;
+        private MapView2D mapView;
+        private int mapTransitionFrame = -1;
+        private ExtractionPoint2D[] extractionPoints;
         public bool IsFinished { get; private set; }
+        public bool HasMap => mapView != null && mapView.IsReady;
+        public bool IsMapOpen => mapView != null && mapView.IsOpen;
+        public bool GameplayInputBlocked => IsFinished || IsMapOpen || focusPaused || mapTransitionFrame == Time.frameCount;
+
+        public void ConfigureMap(MapView2D view) => mapView = view;
+
+        public void SetMapOpen(bool open)
+        {
+            if (mapView == null || !mapView.IsReady || open == IsMapOpen ||
+                open && (IsFinished || !hasFocus || applicationPaused)) return;
+            if (open) inventory?.Close();
+            mapView.Show(open);
+            mapTransitionFrame = Time.frameCount;
+            player?.GetComponent<UnderwaterMover2D>()?.StopMovement();
+            if (extractionPoints != null)
+                foreach (var point in extractionPoints)
+                    if (point != null) point.TickInteraction(false, this);
+            SetExtractionStatus(null, 0f);
+            ApplyPause();
+        }
 
         public void Configure(CombatHealth2D target, Text hp, Image fill, Text exit,
             GameObject result, Text title, Text items, Button restart)
@@ -35,6 +62,8 @@ namespace LootTheDeep.Gameplay
         private void Start()
         {
             inventory = FindFirstObjectByType<InventorySession>();
+            extractionPoints = FindObjectsByType<ExtractionPoint2D>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+                .Where(p => p.gameObject.scene == gameObject.scene).ToArray();
             if (player != null)
             {
                 player.Changed += RefreshHealth;
@@ -65,6 +94,7 @@ namespace LootTheDeep.Gameplay
         {
             if (IsFinished) return;
             IsFinished = true;
+            SetMapOpen(false);
             inventory?.Close();
             if (inventory != null) inventory.enabled = false;
             if (player != null) player.GetComponent<UnderwaterMover2D>()?.SetCombatEnded(true);
@@ -85,12 +115,13 @@ namespace LootTheDeep.Gameplay
                         ? "你已失去行动能力。\n按 Enter 或点击下方按钮重新开始。"
                         : $"本局未撤出 {count} 件携带物资。\n重新开始可再试一次。";
             if (resultPanel != null) resultPanel.SetActive(true);
-            previousTimeScale = Time.timeScale;
-            Time.timeScale = 0f;
+            ApplyPause();
         }
 
         public void Restart()
         {
+            var loader = FindFirstObjectByType<MapPlaytestController>();
+            if (loader != null) { loader.Restart(); return; }
             Time.timeScale = 1f;
             SceneManager.LoadScene(gameObject.scene.name);
         }
@@ -98,6 +129,22 @@ namespace LootTheDeep.Gameplay
         private void Update()
         {
             if (IsFinished && Keyboard.current?.enterKey.wasPressedThisFrame == true) Restart();
+            if (IsFinished || player == null || player.IsDead) return;
+            if (Keyboard.current?.mKey.wasPressedThisFrame == true) SetMapOpen(!IsMapOpen);
+            else if (IsMapOpen && Keyboard.current?.escapeKey.wasPressedThisFrame == true) SetMapOpen(false);
+            if (GameplayInputBlocked) return;
+            ExtractionPoint2D nearest = null;
+            float distance = float.PositiveInfinity;
+            if (inventory == null || !inventory.IsOpen)
+                foreach (var point in extractionPoints)
+                {
+                    if (point == null || !point.CanUse(player)) continue;
+                    float next = (point.transform.position - player.transform.position).sqrMagnitude;
+                    if (next < distance) { distance = next; nearest = point; }
+                }
+            if (nearest == null) SetExtractionStatus(null, 0);
+            foreach (var point in extractionPoints)
+                if (point != null) point.TickInteraction(point == nearest, this);
         }
 
         private void OnApplicationFocus(bool focused)
@@ -114,25 +161,29 @@ namespace LootTheDeep.Gameplay
 
         private void UpdateFocusPause()
         {
-            if (IsFinished || Application.isBatchMode) return;
-            if ((!hasFocus || applicationPaused) && !focusPaused)
+            focusPaused = !Application.isBatchMode && (!hasFocus || applicationPaused);
+            ApplyPause();
+        }
+
+        private void ApplyPause()
+        {
+            bool paused = IsFinished || IsMapOpen || focusPaused;
+            if (paused == pauseApplied) return;
+            if (paused)
             {
                 previousTimeScale = Time.timeScale;
                 Time.timeScale = 0f;
-                focusPaused = true;
             }
-            else if (hasFocus && !applicationPaused && focusPaused)
-            {
-                Time.timeScale = previousTimeScale;
-                focusPaused = false;
-            }
+            else Time.timeScale = previousTimeScale;
+            pauseApplied = paused;
         }
 
         private void OnDestroy()
         {
             if (player != null) { player.Changed -= RefreshHealth; player.Died -= OnPlayerDied; }
             if (restartButton != null) restartButton.onClick.RemoveListener(Restart);
-            if (focusPaused || IsFinished) Time.timeScale = previousTimeScale;
+            // Restart may already have selected the next scene's normal time scale.
+            if (pauseApplied && Time.timeScale == 0f) Time.timeScale = previousTimeScale;
         }
     }
 }

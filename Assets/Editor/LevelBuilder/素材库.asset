@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce95f185ae4bf493b926eb6762cf157b, type: 3}
+  m_Name: "\u7D20\u6750\u5E93"
+  m_EditorClassIdentifier: Assembly-CSharp-Editor::LootTheDeep.LevelBuilder.LevelBuilderLibrary
+  tiles:
+  - {fileID: 11400000, guid: ad8b99240c09e46e2a8e914def4495a3, type: 2}
+  - {fileID: 11400000, guid: f0dffedda9eb541a8bee60cb04e6de62, type: 2}
+  - {fileID: 11400000, guid: ba75f1ae1d4cb4665acb8a6d52e454c0, type: 2}
+  - {fileID: 11400000, guid: a3ec6cdd7d06446daa21c39362c2e13a, type: 2}
+  - {fileID: 11400000, guid: 51261dd9a710b4d488e29988e3904d03, type: 2}
+  - {fileID: 11400000, guid: 5c4aa92c2e5d543e1ab1faaad77fc11e, type: 2}
+  - {fileID: 11400000, guid: f3cceaff1e6674c11ba4aa2926294f95, type: 2}
+  - {fileID: 11400000, guid: f65aa0d5c5c2e42659a8b0fa2d476bc2, type: 2}
+  - {fileID: 11400000, guid: c7b1e41796f03463dab1b61403f0cd18, type: 2}
+  - {fileID: 11400000, guid: ed7dc5921c3bf4a08aaa8c6c04e6b410, type: 2}
+  - {fileID: 11400000, guid: c08cc1310df1d4b6d8ec1d6d19e90fc0, type: 2}
+  - {fileID: 11400000, guid: 4dd669d12f1a4497298bda5517d3e83b, type: 2}
+  - {fileID: 11400000, guid: 669670075d106485c8602e5bc518700a, type: 2}
+  - {fileID: 11400000, guid: fb632dfa08bae454fbcd6d6ca66735fb, type: 2}
+  - {fileID: 11400000, guid: 1f1d12180270b4a518f2a1a3e01edc22, type: 2}
+  - {fileID: 11400000, guid: 996674a11c8fb4370858afa2bcda5b46, type: 2}
+  prefabs:
+  - label: "\u67AA\u624B"
+    kind: 0
+    prefab: {fileID: 527413519764785825, guid: 1eac8d5e5fed3425e88df1110ecc159d, type: 3}
+    scale: {x: 1, y: 1, z: 1}
+    allowRotation: 0
+  - label: "\u7A81\u8FDB\u654C\u4EBA"
+    kind: 0
+    prefab: {fileID: 4881833362702868130, guid: e76a217fe08e94e958bf7654e466b51b, type: 3}
+    scale: {x: 1, y: 1, z: 1}
+    allowRotation: 0
+  - label: "\u53EF\u641C\u7D22\u7269\u8D44\u7BB1"
+    kind: 1
+    prefab: {fileID: 1001, guid: ca28daa8f5184943bf3fdbc3755520d9, type: 3}
+    scale: {x: 1.1, y: 1.1, z: 1.1}
+    allowRotation: 0
+  modules:
+  - {fileID: 11400000, guid: 36f703cfe9f9a404c8af56c557c5377c, type: 2}

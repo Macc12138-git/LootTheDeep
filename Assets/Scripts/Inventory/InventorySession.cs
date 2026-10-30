@@ -28,9 +28,11 @@ namespace LootTheDeep.Inventory
         private CursorLockMode previousLock;
         private bool previousCursor;
         private bool hasCursorState;
+        private CombatPrototypeSession2D combat;
 
         private void Start()
         {
+            combat = FindFirstObjectByType<CombatPrototypeSession2D>();
             foreach (var grid in View.PlayerGrids)
                 Storage.Add(new GridInventory(grid.displayName, grid.columns, grid.rows));
             foreach (var seed in initialItems)
@@ -42,7 +44,7 @@ namespace LootTheDeep.Inventory
         }
         private void Update()
         {
-            if (View == null || player == null) return;
+            if (View == null || player == null || combat != null && combat.GameplayInputBlocked) return;
             if (IsOpen && Target != null && !CanInteract(Target)) Close();
             // Also handle a container destroyed while its page was open.
             if (IsOpen && View.HasContainer && Target == null) Close();
@@ -80,7 +82,8 @@ namespace LootTheDeep.Inventory
                 nearby = candidate;
                 if (nearby != null) nearby.Highlight(true);
             }
-            View.SetPrompt(nearby == null ? "Tab  随身物品" : "F  搜索 · " + nearby.displayName + "     Tab  随身物品");
+            string prompt = nearby == null ? "Tab  随身物品" : "F  搜索 · " + nearby.displayName + "     Tab  随身物品";
+            View.SetPrompt(prompt + (combat != null && combat.HasMap ? "     M  地图" : ""));
         }
         private bool CanInteract(SearchableContainer container)
         {
@@ -99,7 +102,8 @@ namespace LootTheDeep.Inventory
         }
         public void Open(SearchableContainer container)
         {
-            if (View == null || (container != null && !CanInteract(container))) return;
+            if (View == null || combat != null && combat.GameplayInputBlocked ||
+                (container != null && !CanInteract(container))) return;
             if (!IsOpen)
             {
                 previousLock = Cursor.lockState; previousCursor = Cursor.visible; hasCursorState = true;

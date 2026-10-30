@@ -8,35 +8,26 @@ namespace LootTheDeep.Gameplay
     {
         [SerializeField, Min(0.1f)] private float interactDistance = 1.5f;
         [SerializeField, Min(0.1f)] private float holdSeconds = 2f;
-        private CombatPrototypeSession2D session;
-        private CombatHealth2D player;
-        private InventorySession inventory;
+        public string displayName = "撤离点";
+        public float InteractDistance => interactDistance;
         private float progress;
 
-        private void Start()
-        {
-            session = FindFirstObjectByType<CombatPrototypeSession2D>();
-            player = FindFirstObjectByType<PlayerShooter2D>()?.GetComponent<CombatHealth2D>();
-            inventory = FindFirstObjectByType<InventorySession>();
-        }
+        public bool CanUse(CombatHealth2D player) => isActiveAndEnabled &&
+            Vector2.Distance(transform.position, player.transform.position) <= interactDistance;
 
-        private void Update()
+        public void TickInteraction(bool selected, CombatPrototypeSession2D session)
         {
-            if (session == null || session.IsFinished || player == null || player.IsDead) return;
-            bool nearby = Vector2.Distance(transform.position, player.transform.position) <= interactDistance;
-            if (!nearby || inventory != null && inventory.IsOpen)
-            {
-                progress = 0f;
-                session.SetExtractionStatus(null, 0f);
-                return;
-            }
+            if (!selected) { progress = 0; return; }
             if (Keyboard.current?.eKey.isPressed == true)
             {
                 progress += Time.deltaTime / holdSeconds;
                 if (progress >= 1f) { session.Finish(true); return; }
             }
             else progress = 0f;
-            session.SetExtractionStatus("按住 E 启动撤离", progress);
+            session.SetExtractionStatus("按住 E 启动撤离 · " + displayName, progress);
         }
+
+        private void OnDrawGizmos()
+        { Gizmos.color = Color.green; Gizmos.DrawWireSphere(transform.position, interactDistance); }
     }
 }
